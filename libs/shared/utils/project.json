@@ -1,0 +1,17 @@
+{
+  "name": "shared-utils",
+  "tags": ["scope:shared", "type:util"],
+  "sourceRoot": "libs/shared/utils/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/shared/utils",
+        "main": "libs/shared/utils/src/index.ts",
+        "tsConfig": "libs/shared/utils/tsconfig.lib.json",
+        "platform": "node"
+      }
+    }
+  }
+}

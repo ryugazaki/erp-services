@@ -1,0 +1,1156 @@
+
+[7m[1m[33m NX [39m[22m[27m  [33m--skip-nx-cache disables the connection to Nx Cloud for the current run.[39m
+
+The remote cache will not be read from or written to during this run.
+
+
+[7m[1m[36m NX [39m[22m[27m  [36mRunning target [1mbuild[22m for 9 projects:[39m
+
+[2m-[22m core-module-registry
+[2m-[22m core-event-bus
+[2m-[22m shared-testing
+[2m-[22m core-database
+[2m-[22m shared-kernel
+[2m-[22m shared-utils
+[2m-[22m core-http
+[2m-[22m gateway
+[2m-[22m module-auth
+
+[2m[36m[39m[22m
+
+[2m> [22m[2mnx run[22m shared-kernel:build
+
+Compiling with SWC for shared-kernel...
+
+
+[2m> [22m[2mnx run[22m shared-utils:build
+
+Compiling with SWC for shared-utils...
+
+
+[2m> [22m[2mnx run[22m core-event-bus:build
+
+Compiling with SWC for core-event-bus...
+
+[4m[34mlibs\core\event-bus\src\IEventBus.ts:1:29[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/index.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/event-bus/src/IEventBus.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/event-bus/src/InMemoryEventBus.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/event-bus/src/RabbitMQEventBus.ts'
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mimport[39m { [33mDomainEvent[39m } from [32m'@erp/shared/kernel'[39m[33m;[39m
+ [90m   | [39m                            [31m[1m^[22m[39m
+ [90m 2 | [39m
+ [90m 3 | [39m[36mexport[39m interface [33mIEventHandler[39m[33m<[39m[33mT[39m [36mextends[39m [33mDomainEvent[39m [33m=[39m [33mDomainEvent[39m[33m>[39m {
+ [90m 4 | [39m  handle(event[33m:[39m [33mT[39m)[33m:[39m [33mPromise[39m[33m<[39m[36mvoid[39m[33m>[39m[33m;[39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:4:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/index.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 2 | [39m[36mimport[39m { [33mDomainEvent[39m } from [32m'@erp/shared/kernel'[39m[33m;[39m
+ [90m 3 | [39m[36mimport[39m { [33mIEventBus[39m[33m,[39m [33mIEventHandler[39m } from [32m'./IEventBus'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 | [39m[36mimport[39m { [33mLogger[39m } from [32m'@erp/shared/utils'[39m[33m;[39m
+ [90m   | [39m                       [31m[1m^[22m[39m
+ [90m 5 | [39m
+ [90m 6 | [39m[36mconst[39m [33mEXCHANGE_NAME[39m [33m=[39m [32m'erp.events'[39m[33m;[39m
+ [90m 7 | [39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:20:7[39m[24m - [31m[1merror[22m[39m [90mTS2739[39m: Type 'ChannelModel' is missing the following properties from type 'Connection': serverProperties, expectSocketClose, sentSinceLastCheck, recvSinceLastCheck, sendMessage
+
+[0m [90m 18 | [39m
+ [90m 19 | [39m    [36mtry[39m {
+[31m[1m>[22m[39m[90m 20 | [39m      [36mthis[39m[33m.[39mconnection [33m=[39m await amqp[33m.[39mconnect([36mthis[39m[33m.[39murl)[33m;[39m
+ [90m    | [39m      [31m[1m^[22m[39m
+ [90m 21 | [39m      [36mthis[39m[33m.[39mchannel [33m=[39m await [36mthis[39m[33m.[39mconnection[33m.[39mcreateChannel()[33m;[39m
+ [90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m 23 | [39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:21:28[39m[24m - [31m[1merror[22m[39m [90mTS2531[39m: Object is possibly 'null'.
+
+[0m [90m 19 | [39m    [36mtry[39m {
+ [90m 20 | [39m      [36mthis[39m[33m.[39mconnection [33m=[39m await amqp[33m.[39mconnect([36mthis[39m[33m.[39murl)[33m;[39m
+[31m[1m>[22m[39m[90m 21 | [39m      [36mthis[39m[33m.[39mchannel [33m=[39m await [36mthis[39m[33m.[39mconnection[33m.[39mcreateChannel()[33m;[39m
+ [90m    | [39m                           [31m[1m^[22m[39m
+ [90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m 23 | [39m
+ [90m 24 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'close'[39m[33m,[39m () [33m=>[39m {[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:21:44[39m[24m - [31m[1merror[22m[39m [90mTS2339[39m: Property 'createChannel' does not exist on type 'Connection'.
+
+[0m [90m 19 | [39m    [36mtry[39m {
+ [90m 20 | [39m      [36mthis[39m[33m.[39mconnection [33m=[39m await amqp[33m.[39mconnect([36mthis[39m[33m.[39murl)[33m;[39m
+[31m[1m>[22m[39m[90m 21 | [39m      [36mthis[39m[33m.[39mchannel [33m=[39m await [36mthis[39m[33m.[39mconnection[33m.[39mcreateChannel()[33m;[39m
+ [90m    | [39m                                           [31m[1m^[22m[39m
+ [90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m 23 | [39m
+ [90m 24 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'close'[39m[33m,[39m () [33m=>[39m {[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:22:13[39m[24m - [31m[1merror[22m[39m [90mTS2531[39m: Object is possibly 'null'.
+
+[0m [90m 20 | [39m      [36mthis[39m[33m.[39mconnection [33m=[39m await amqp[33m.[39mconnect([36mthis[39m[33m.[39murl)[33m;[39m
+ [90m 21 | [39m      [36mthis[39m[33m.[39mchannel [33m=[39m await [36mthis[39m[33m.[39mconnection[33m.[39mcreateChannel()[33m;[39m
+[31m[1m>[22m[39m[90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m    | [39m            [31m[1m^[22m[39m
+ [90m 23 | [39m
+ [90m 24 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'close'[39m[33m,[39m () [33m=>[39m {
+ [90m 25 | [39m        [36mthis[39m[33m.[39mchannel [33m=[39m [36mnull[39m[33m;[39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:24:7[39m[24m - [31m[1merror[22m[39m [90mTS2531[39m: Object is possibly 'null'.
+
+[0m [90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m 23 | [39m
+[31m[1m>[22m[39m[90m 24 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'close'[39m[33m,[39m () [33m=>[39m {
+ [90m    | [39m      [31m[1m^[22m[39m
+ [90m 25 | [39m        [36mthis[39m[33m.[39mchannel [33m=[39m [36mnull[39m[33m;[39m
+ [90m 26 | [39m        [36mthis[39m[33m.[39mconnection [33m=[39m [36mnull[39m[33m;[39m
+ [90m 27 | [39m        [36mthis[39m[33m.[39mscheduleReconnect()[33m;[39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:30:7[39m[24m - [31m[1merror[22m[39m [90mTS2531[39m: Object is possibly 'null'.
+
+[0m [90m 28 | [39m      })[33m;[39m
+ [90m 29 | [39m
+[31m[1m>[22m[39m[90m 30 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'error'[39m[33m,[39m (err) [33m=>[39m {
+ [90m    | [39m      [31m[1m^[22m[39m
+ [90m 31 | [39m        [33mLogger[39m[33m.[39merror([32m'RabbitMQ connection error'[39m[33m,[39m { error[33m:[39m err[33m.[39mmessage })[33m;[39m
+ [90m 32 | [39m      })[33m;[39m
+ [90m 33 | [39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:103:28[39m[24m - [31m[1merror[22m[39m [90mTS2339[39m: Property 'close' does not exist on type 'Connection'.
+
+[0m [90m 101 | [39m    }
+ [90m 102 | [39m    await [36mthis[39m[33m.[39mchannel[33m?[39m[33m.[39mclose()[33m;[39m
+[31m[1m>[22m[39m[90m 103 | [39m    await [36mthis[39m[33m.[39mconnection[33m?[39m[33m.[39mclose()[33m;[39m
+ [90m     | [39m                           [31m[1m^[22m[39m
+ [90m 104 | [39m    [36mthis[39m[33m.[39mchannel [33m=[39m [36mnull[39m[33m;[39m
+ [90m 105 | [39m    [36mthis[39m[33m.[39mconnection [33m=[39m [36mnull[39m[33m;[39m
+ [90m 106 | [39m  }[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:1:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/types/Result.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mexport[39m { [33mResult[39m } from [32m'./types/Result'[39m[33m;[39m
+ [90m   | [39m                       [31m[1m^[22m[39m
+ [90m 2 | [39m[36mexport[39m type { [33mPaginationMeta[39m[33m,[39m [33mPaginatedResult[39m } from [32m'./types/Pagination'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:2:54[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/types/Pagination.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { [33mResult[39m } from [32m'./types/Result'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 | [39m[36mexport[39m type { [33mPaginationMeta[39m[33m,[39m [33mPaginatedResult[39m } from [32m'./types/Pagination'[39m[33m;[39m
+ [90m   | [39m                                                     [31m[1m^[22m[39m
+ [90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+ [90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:3:26[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/errors/AppError.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { [33mResult[39m } from [32m'./types/Result'[39m[33m;[39m
+ [90m 2 | [39m[36mexport[39m type { [33mPaginationMeta[39m[33m,[39m [33mPaginatedResult[39m } from [32m'./types/Pagination'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+ [90m   | [39m                         [31m[1m^[22m[39m
+ [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+ [90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+ [90m 6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:4:29[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/errors/DomainError.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 2 | [39m[36mexport[39m type { [33mPaginationMeta[39m[33m,[39m [33mPaginatedResult[39m } from [32m'./types/Pagination'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+ [90m   | [39m                            [31m[1m^[22m[39m
+ [90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+ [90m 6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+ [90m 7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:5:29[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/events/DomainEvent.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via './events/DomainEvent' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/index.ts'
+    Imported via '../events/DomainEvent' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/domain/AggregateRoot.ts'
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+ [90m   | [39m                            [31m[1m^[22m[39m
+ [90m 6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+ [90m 7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+ [90m 8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:6:31[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/domain/AggregateRoot.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+ [90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+ [90m   | [39m                              [31m[1m^[22m[39m
+ [90m 7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+ [90m 8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+ [90m 9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:7:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/domain/Entity.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m  5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+ [90m  6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+ [90m    | [39m                       [31m[1m^[22m[39m
+ [90m  8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+ [90m  9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m
+ [90m 10 | [39m[36mexport[39m type { [33mIMapper[39m } from [32m'./interfaces/IMapper'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:8:31[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/interfaces/IUseCase.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m  6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+ [90m  7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+ [90m    | [39m                              [31m[1m^[22m[39m
+ [90m  9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m
+ [90m 10 | [39m[36mexport[39m type { [33mIMapper[39m } from [32m'./interfaces/IMapper'[39m[33m;[39m
+ [90m 11 | [39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:9:34[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/interfaces/IRepository.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m  7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+ [90m  8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m
+ [90m    | [39m                                 [31m[1m^[22m[39m
+ [90m 10 | [39m[36mexport[39m type { [33mIMapper[39m } from [32m'./interfaces/IMapper'[39m[33m;[39m
+ [90m 11 | [39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:10:30[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/interfaces/IMapper.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m  8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+ [90m  9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 10 | [39m[36mexport[39m type { [33mIMapper[39m } from [32m'./interfaces/IMapper'[39m[33m;[39m
+ [90m    | [39m                             [31m[1m^[22m[39m
+ [90m 11 | [39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:1:65[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/date.utils.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mexport[39m { formatISODate[33m,[39m parseISODate[33m,[39m addDays[33m,[39m isExpired } from [32m'./date.utils'[39m[33m;[39m
+ [90m   | [39m                                                                [31m[1m^[22m[39m
+ [90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:2:51[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/string.utils.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { formatISODate[33m,[39m parseISODate[33m,[39m addDays[33m,[39m isExpired } from [32m'./date.utils'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+ [90m   | [39m                                                  [31m[1m^[22m[39m
+ [90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m
+ [90m 5 | [39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:3:38[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/crypto.utils.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { formatISODate[33m,[39m parseISODate[33m,[39m addDays[33m,[39m isExpired } from [32m'./date.utils'[39m[33m;[39m
+ [90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+ [90m   | [39m                                     [31m[1m^[22m[39m
+ [90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m
+ [90m 5 | [39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:4:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/logger.ts' is not under 'rootDir' 'libs/core/event-bus'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m
+ [90m   | [39m                       [31m[1m^[22m[39m
+ [90m 5 | [39m[0m
+
+Found 23 errors.
+
+[2m> [22m[2mnx run[22m core-module-registry:build
+
+Compiling with SWC for core-module-registry...
+
+
+[2m> [22m[2mnx run[22m core-http:build
+
+Compiling with SWC for core-http...
+
+[4m[34mlibs\core\http\src\middlewares\error.middleware.ts:3:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/index.ts' is not under 'rootDir' 'libs/core/http'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mimport[39m { [33mRequest[39m[33m,[39m [33mResponse[39m[33m,[39m [33mNextFunction[39m } from [32m'express'[39m[33m;[39m
+ [90m 2 | [39m[36mimport[39m { [33mApiResponse[39m } from [32m'../ApiResponse'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 3 | [39m[36mimport[39m { [33mLogger[39m } from [32m'@erp/shared/utils'[39m[33m;[39m
+ [90m   | [39m                       [31m[1m^[22m[39m
+ [90m 4 | [39m
+ [90m 5 | [39m[36mexport[39m [36mfunction[39m errorMiddleware(
+ [90m 6 | [39m  err[33m:[39m [33mError[39m[33m,[39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:1:65[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/date.utils.ts' is not under 'rootDir' 'libs/core/http'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mexport[39m { formatISODate[33m,[39m parseISODate[33m,[39m addDays[33m,[39m isExpired } from [32m'./date.utils'[39m[33m;[39m
+ [90m   | [39m                                                                [31m[1m^[22m[39m
+ [90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:2:51[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/string.utils.ts' is not under 'rootDir' 'libs/core/http'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { formatISODate[33m,[39m parseISODate[33m,[39m addDays[33m,[39m isExpired } from [32m'./date.utils'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+ [90m   | [39m                                                  [31m[1m^[22m[39m
+ [90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m
+ [90m 5 | [39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:3:38[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/crypto.utils.ts' is not under 'rootDir' 'libs/core/http'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { formatISODate[33m,[39m parseISODate[33m,[39m addDays[33m,[39m isExpired } from [32m'./date.utils'[39m[33m;[39m
+ [90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+ [90m   | [39m                                     [31m[1m^[22m[39m
+ [90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m
+ [90m 5 | [39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:4:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/logger.ts' is not under 'rootDir' 'libs/core/http'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m
+ [90m   | [39m                       [31m[1m^[22m[39m
+ [90m 5 | [39m[0m
+
+Found 5 errors.
+
+[2m> [22m[2mnx run[22m core-database:build
+
+Compiling with SWC for core-database...
+
+[4m[34mlibs\core\database\src\DatabaseConnection.ts:3:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/index.ts' is not under 'rootDir' 'libs/core/database'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mimport[39m { [33mKysely[39m[33m,[39m [33mPostgresDialect[39m } from [32m'kysely'[39m[33m;[39m
+ [90m 2 | [39m[36mimport[39m { [33mPool[39m } from [32m'pg'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 3 | [39m[36mimport[39m { [33mLogger[39m } from [32m'@erp/shared/utils'[39m[33m;[39m
+ [90m   | [39m                       [31m[1m^[22m[39m
+ [90m 4 | [39m
+ [90m 5 | [39m[36mexport[39m interface [33mDatabaseConfig[39m {
+ [90m 6 | [39m  host[33m:[39m string[33m;[39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:1:65[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/date.utils.ts' is not under 'rootDir' 'libs/core/database'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mexport[39m { formatISODate[33m,[39m parseISODate[33m,[39m addDays[33m,[39m isExpired } from [32m'./date.utils'[39m[33m;[39m
+ [90m   | [39m                                                                [31m[1m^[22m[39m
+ [90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:2:51[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/string.utils.ts' is not under 'rootDir' 'libs/core/database'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { formatISODate[33m,[39m parseISODate[33m,[39m addDays[33m,[39m isExpired } from [32m'./date.utils'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+ [90m   | [39m                                                  [31m[1m^[22m[39m
+ [90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m
+ [90m 5 | [39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:3:38[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/crypto.utils.ts' is not under 'rootDir' 'libs/core/database'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { formatISODate[33m,[39m parseISODate[33m,[39m addDays[33m,[39m isExpired } from [32m'./date.utils'[39m[33m;[39m
+ [90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+ [90m   | [39m                                     [31m[1m^[22m[39m
+ [90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m
+ [90m 5 | [39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:4:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/logger.ts' is not under 'rootDir' 'libs/core/database'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m
+ [90m   | [39m                       [31m[1m^[22m[39m
+ [90m 5 | [39m[0m
+
+Found 5 errors.
+
+[2m> [22m[2mnx run[22m shared-testing:build
+
+Compiling with SWC for shared-testing...
+
+[4m[34mlibs\shared\kernel\src\index.ts:1:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/types/Result.ts' is not under 'rootDir' 'libs/shared/testing'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mexport[39m { [33mResult[39m } from [32m'./types/Result'[39m[33m;[39m
+ [90m   | [39m                       [31m[1m^[22m[39m
+ [90m 2 | [39m[36mexport[39m type { [33mPaginationMeta[39m[33m,[39m [33mPaginatedResult[39m } from [32m'./types/Pagination'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:2:54[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/types/Pagination.ts' is not under 'rootDir' 'libs/shared/testing'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { [33mResult[39m } from [32m'./types/Result'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 | [39m[36mexport[39m type { [33mPaginationMeta[39m[33m,[39m [33mPaginatedResult[39m } from [32m'./types/Pagination'[39m[33m;[39m
+ [90m   | [39m                                                     [31m[1m^[22m[39m
+ [90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+ [90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:3:26[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/errors/AppError.ts' is not under 'rootDir' 'libs/shared/testing'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { [33mResult[39m } from [32m'./types/Result'[39m[33m;[39m
+ [90m 2 | [39m[36mexport[39m type { [33mPaginationMeta[39m[33m,[39m [33mPaginatedResult[39m } from [32m'./types/Pagination'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+ [90m   | [39m                         [31m[1m^[22m[39m
+ [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+ [90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+ [90m 6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:4:29[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/errors/DomainError.ts' is not under 'rootDir' 'libs/shared/testing'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 2 | [39m[36mexport[39m type { [33mPaginationMeta[39m[33m,[39m [33mPaginatedResult[39m } from [32m'./types/Pagination'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+ [90m   | [39m                            [31m[1m^[22m[39m
+ [90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+ [90m 6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+ [90m 7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:5:29[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/events/DomainEvent.ts' is not under 'rootDir' 'libs/shared/testing'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via './events/DomainEvent' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/index.ts'
+    Imported via '../events/DomainEvent' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/domain/AggregateRoot.ts'
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+ [90m   | [39m                            [31m[1m^[22m[39m
+ [90m 6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+ [90m 7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+ [90m 8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:6:31[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/domain/AggregateRoot.ts' is not under 'rootDir' 'libs/shared/testing'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+ [90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+ [90m   | [39m                              [31m[1m^[22m[39m
+ [90m 7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+ [90m 8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+ [90m 9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:7:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/domain/Entity.ts' is not under 'rootDir' 'libs/shared/testing'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m  5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+ [90m  6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+ [90m    | [39m                       [31m[1m^[22m[39m
+ [90m  8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+ [90m  9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m
+ [90m 10 | [39m[36mexport[39m type { [33mIMapper[39m } from [32m'./interfaces/IMapper'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:8:31[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/interfaces/IUseCase.ts' is not under 'rootDir' 'libs/shared/testing'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m  6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+ [90m  7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+ [90m    | [39m                              [31m[1m^[22m[39m
+ [90m  9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m
+ [90m 10 | [39m[36mexport[39m type { [33mIMapper[39m } from [32m'./interfaces/IMapper'[39m[33m;[39m
+ [90m 11 | [39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:9:34[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/interfaces/IRepository.ts' is not under 'rootDir' 'libs/shared/testing'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m  7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+ [90m  8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m
+ [90m    | [39m                                 [31m[1m^[22m[39m
+ [90m 10 | [39m[36mexport[39m type { [33mIMapper[39m } from [32m'./interfaces/IMapper'[39m[33m;[39m
+ [90m 11 | [39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:10:30[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/interfaces/IMapper.ts' is not under 'rootDir' 'libs/shared/testing'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m  8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+ [90m  9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 10 | [39m[36mexport[39m type { [33mIMapper[39m } from [32m'./interfaces/IMapper'[39m[33m;[39m
+ [90m    | [39m                             [31m[1m^[22m[39m
+ [90m 11 | [39m[0m
+
+[4m[34mlibs\shared\testing\src\helpers\testUtils.ts:1:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/index.ts' is not under 'rootDir' 'libs/shared/testing'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mimport[39m { [33mResult[39m } from [32m'@erp/shared/kernel'[39m[33m;[39m
+ [90m   | [39m                       [31m[1m^[22m[39m
+ [90m 2 | [39m
+ [90m 3 | [39m[36mexport[39m [36mfunction[39m expectOk[33m<[39m[33mT[39m[33m>[39m(result[33m:[39m [33mResult[39m[33m<[39m[33mT[39m[33m>[39m)[33m:[39m [33mT[39m {
+ [90m 4 | [39m  [36mif[39m (result[33m.[39misFailure()) {[0m
+
+Found 11 errors.
+
+[2m> [22m[2mnx run[22m module-auth:build
+
+Compiling with SWC for module-auth...
+
+[4m[34mlibs\core\event-bus\src\IEventBus.ts:1:29[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/index.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/event-bus/src/IEventBus.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/event-bus/src/InMemoryEventBus.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/event-bus/src/RabbitMQEventBus.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/domain/entities/User.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/domain/value-objects/Email.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/domain/value-objects/Password.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/domain/events/UserCreated.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/domain/events/UserDeactivated.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/domain/entities/RefreshToken.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/domain/events/RefreshTokenRotated.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/application/use-cases/LoginUseCase.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/domain/events/UserLoggedIn.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/application/use-cases/RegisterUseCase.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/application/use-cases/RefreshTokenUseCase.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/domain/events/TokenFamilyCompromised.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/application/use-cases/LogoutUseCase.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/application/use-cases/DeactivateUserUseCase.ts'
+    Imported via '@erp/shared/kernel' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/tests/helpers/mocks/MockEventBus.ts'
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mimport[39m { [33mDomainEvent[39m } from [32m'@erp/shared/kernel'[39m[33m;[39m
+ [90m   | [39m                            [31m[1m^[22m[39m
+ [90m 2 | [39m
+ [90m 3 | [39m[36mexport[39m interface [33mIEventHandler[39m[33m<[39m[33mT[39m [36mextends[39m [33mDomainEvent[39m [33m=[39m [33mDomainEvent[39m[33m>[39m {
+ [90m 4 | [39m  handle(event[33m:[39m [33mT[39m)[33m:[39m [33mPromise[39m[33m<[39m[36mvoid[39m[33m>[39m[33m;[39m[0m
+
+[4m[34mlibs\core\event-bus\src\index.ts:1:42[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/event-bus/src/IEventBus.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via './IEventBus' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/event-bus/src/index.ts'
+    Imported via './IEventBus' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/event-bus/src/InMemoryEventBus.ts'
+    Imported via './IEventBus' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/event-bus/src/RabbitMQEventBus.ts'
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mexport[39m { [33mIEventBus[39m[33m,[39m [33mIEventHandler[39m } from [32m'./IEventBus'[39m[33m;[39m
+ [90m   | [39m                                         [31m[1m^[22m[39m
+ [90m 2 | [39m[36mexport[39m { [33mInMemoryEventBus[39m } from [32m'./InMemoryEventBus'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { [33mRabbitMQEventBus[39m } from [32m'./RabbitMQEventBus'[39m[33m;[39m
+ [90m 4 | [39m[0m
+
+[4m[34mlibs\core\event-bus\src\index.ts:2:34[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/event-bus/src/InMemoryEventBus.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { [33mIEventBus[39m[33m,[39m [33mIEventHandler[39m } from [32m'./IEventBus'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 | [39m[36mexport[39m { [33mInMemoryEventBus[39m } from [32m'./InMemoryEventBus'[39m[33m;[39m
+ [90m   | [39m                                 [31m[1m^[22m[39m
+ [90m 3 | [39m[36mexport[39m { [33mRabbitMQEventBus[39m } from [32m'./RabbitMQEventBus'[39m[33m;[39m
+ [90m 4 | [39m[0m
+
+[4m[34mlibs\core\event-bus\src\index.ts:3:34[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/event-bus/src/RabbitMQEventBus.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { [33mIEventBus[39m[33m,[39m [33mIEventHandler[39m } from [32m'./IEventBus'[39m[33m;[39m
+ [90m 2 | [39m[36mexport[39m { [33mInMemoryEventBus[39m } from [32m'./InMemoryEventBus'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 3 | [39m[36mexport[39m { [33mRabbitMQEventBus[39m } from [32m'./RabbitMQEventBus'[39m[33m;[39m
+ [90m   | [39m                                 [31m[1m^[22m[39m
+ [90m 4 | [39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:4:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/index.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via '@erp/shared/utils' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/event-bus/src/RabbitMQEventBus.ts'
+    Imported via '@erp/shared/utils' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/http/src/middlewares/error.middleware.ts'
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 2 | [39m[36mimport[39m { [33mDomainEvent[39m } from [32m'@erp/shared/kernel'[39m[33m;[39m
+ [90m 3 | [39m[36mimport[39m { [33mIEventBus[39m[33m,[39m [33mIEventHandler[39m } from [32m'./IEventBus'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 | [39m[36mimport[39m { [33mLogger[39m } from [32m'@erp/shared/utils'[39m[33m;[39m
+ [90m   | [39m                       [31m[1m^[22m[39m
+ [90m 5 | [39m
+ [90m 6 | [39m[36mconst[39m [33mEXCHANGE_NAME[39m [33m=[39m [32m'erp.events'[39m[33m;[39m
+ [90m 7 | [39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:20:7[39m[24m - [31m[1merror[22m[39m [90mTS2739[39m: Type 'ChannelModel' is missing the following properties from type 'Connection': serverProperties, expectSocketClose, sentSinceLastCheck, recvSinceLastCheck, sendMessage
+
+[0m [90m 18 | [39m
+ [90m 19 | [39m    [36mtry[39m {
+[31m[1m>[22m[39m[90m 20 | [39m      [36mthis[39m[33m.[39mconnection [33m=[39m await amqp[33m.[39mconnect([36mthis[39m[33m.[39murl)[33m;[39m
+ [90m    | [39m      [31m[1m^[22m[39m
+ [90m 21 | [39m      [36mthis[39m[33m.[39mchannel [33m=[39m await [36mthis[39m[33m.[39mconnection[33m.[39mcreateChannel()[33m;[39m
+ [90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m 23 | [39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:21:28[39m[24m - [31m[1merror[22m[39m [90mTS2531[39m: Object is possibly 'null'.
+
+[0m [90m 19 | [39m    [36mtry[39m {
+ [90m 20 | [39m      [36mthis[39m[33m.[39mconnection [33m=[39m await amqp[33m.[39mconnect([36mthis[39m[33m.[39murl)[33m;[39m
+[31m[1m>[22m[39m[90m 21 | [39m      [36mthis[39m[33m.[39mchannel [33m=[39m await [36mthis[39m[33m.[39mconnection[33m.[39mcreateChannel()[33m;[39m
+ [90m    | [39m                           [31m[1m^[22m[39m
+ [90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m 23 | [39m
+ [90m 24 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'close'[39m[33m,[39m () [33m=>[39m {[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:21:44[39m[24m - [31m[1merror[22m[39m [90mTS2339[39m: Property 'createChannel' does not exist on type 'Connection'.
+
+[0m [90m 19 | [39m    [36mtry[39m {
+ [90m 20 | [39m      [36mthis[39m[33m.[39mconnection [33m=[39m await amqp[33m.[39mconnect([36mthis[39m[33m.[39murl)[33m;[39m
+[31m[1m>[22m[39m[90m 21 | [39m      [36mthis[39m[33m.[39mchannel [33m=[39m await [36mthis[39m[33m.[39mconnection[33m.[39mcreateChannel()[33m;[39m
+ [90m    | [39m                                           [31m[1m^[22m[39m
+ [90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m 23 | [39m
+ [90m 24 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'close'[39m[33m,[39m () [33m=>[39m {[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:22:13[39m[24m - [31m[1merror[22m[39m [90mTS2531[39m: Object is possibly 'null'.
+
+[0m [90m 20 | [39m      [36mthis[39m[33m.[39mconnection [33m=[39m await amqp[33m.[39mconnect([36mthis[39m[33m.[39murl)[33m;[39m
+ [90m 21 | [39m      [36mthis[39m[33m.[39mchannel [33m=[39m await [36mthis[39m[33m.[39mconnection[33m.[39mcreateChannel()[33m;[39m
+[31m[1m>[22m[39m[90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m    | [39m            [31m[1m^[22m[39m
+ [90m 23 | [39m
+ [90m 24 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'close'[39m[33m,[39m () [33m=>[39m {
+ [90m 25 | [39m        [36mthis[39m[33m.[39mchannel [33m=[39m [36mnull[39m[33m;[39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:24:7[39m[24m - [31m[1merror[22m[39m [90mTS2531[39m: Object is possibly 'null'.
+
+[0m [90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m 23 | [39m
+[31m[1m>[22m[39m[90m 24 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'close'[39m[33m,[39m () [33m=>[39m {
+ [90m    | [39m      [31m[1m^[22m[39m
+ [90m 25 | [39m        [36mthis[39m[33m.[39mchannel [33m=[39m [36mnull[39m[33m;[39m
+ [90m 26 | [39m        [36mthis[39m[33m.[39mconnection [33m=[39m [36mnull[39m[33m;[39m
+ [90m 27 | [39m        [36mthis[39m[33m.[39mscheduleReconnect()[33m;[39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:30:7[39m[24m - [31m[1merror[22m[39m [90mTS2531[39m: Object is possibly 'null'.
+
+[0m [90m 28 | [39m      })[33m;[39m
+ [90m 29 | [39m
+[31m[1m>[22m[39m[90m 30 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'error'[39m[33m,[39m (err) [33m=>[39m {
+ [90m    | [39m      [31m[1m^[22m[39m
+ [90m 31 | [39m        [33mLogger[39m[33m.[39merror([32m'RabbitMQ connection error'[39m[33m,[39m { error[33m:[39m err[33m.[39mmessage })[33m;[39m
+ [90m 32 | [39m      })[33m;[39m
+ [90m 33 | [39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:103:28[39m[24m - [31m[1merror[22m[39m [90mTS2339[39m: Property 'close' does not exist on type 'Connection'.
+
+[0m [90m 101 | [39m    }
+ [90m 102 | [39m    await [36mthis[39m[33m.[39mchannel[33m?[39m[33m.[39mclose()[33m;[39m
+[31m[1m>[22m[39m[90m 103 | [39m    await [36mthis[39m[33m.[39mconnection[33m?[39m[33m.[39mclose()[33m;[39m
+ [90m     | [39m                           [31m[1m^[22m[39m
+ [90m 104 | [39m    [36mthis[39m[33m.[39mchannel [33m=[39m [36mnull[39m[33m;[39m
+ [90m 105 | [39m    [36mthis[39m[33m.[39mconnection [33m=[39m [36mnull[39m[33m;[39m
+ [90m 106 | [39m  }[0m
+
+[4m[34mlibs\core\http\src\ApiResponse.ts:1:32[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/http/src/RequestContext.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via './RequestContext' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/http/src/ApiResponse.ts'
+    Imported via './RequestContext' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/http/src/index.ts'
+    Imported via '../RequestContext' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/http/src/middlewares/request-id.middleware.ts'
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mimport[39m { [33mRequestContext[39m } from [32m'./RequestContext'[39m[33m;[39m
+ [90m   | [39m                               [31m[1m^[22m[39m
+ [90m 2 | [39m
+ [90m 3 | [39m[36mexport[39m interface [33mSuccessResponse[39m[33m<[39m[33mT[39m[33m>[39m {
+ [90m 4 | [39m  success[33m:[39m [36mtrue[39m[33m;[39m[0m
+
+[4m[34mlibs\core\http\src\index.ts:1:29[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/http/src/ApiResponse.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via './ApiResponse' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/http/src/index.ts'
+    Imported via './ApiResponse' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/http/src/index.ts'
+    Imported via '../ApiResponse' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/http/src/middlewares/error.middleware.ts'
+    Imported via '../ApiResponse' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/http/src/middlewares/validate.middleware.ts'
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mexport[39m { [33mApiResponse[39m } from [32m'./ApiResponse'[39m[33m;[39m
+ [90m   | [39m                            [31m[1m^[22m[39m
+ [90m 2 | [39m[36mexport[39m type { [33mSuccessResponse[39m[33m,[39m [33mErrorResponse[39m[33m,[39m [33mFieldError[39m[33m,[39m [33mPaginationMeta[39m } from [32m'./ApiResponse'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { [33mRequestContext[39m } from [32m'./RequestContext'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { errorMiddleware } from [32m'./middlewares/error.middleware'[39m[33m;[39m[0m
+
+[4m[34mlibs\core\http\src\index.ts:4:33[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/http/src/middlewares/error.middleware.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 2 | [39m[36mexport[39m type { [33mSuccessResponse[39m[33m,[39m [33mErrorResponse[39m[33m,[39m [33mFieldError[39m[33m,[39m [33mPaginationMeta[39m } from [32m'./ApiResponse'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { [33mRequestContext[39m } from [32m'./RequestContext'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 | [39m[36mexport[39m { errorMiddleware } from [32m'./middlewares/error.middleware'[39m[33m;[39m
+ [90m   | [39m                                [31m[1m^[22m[39m
+ [90m 5 | [39m[36mexport[39m { validate } from [32m'./middlewares/validate.middleware'[39m[33m;[39m
+ [90m 6 | [39m[36mexport[39m { requestIdMiddleware } from [32m'./middlewares/request-id.middleware'[39m[33m;[39m
+ [90m 7 | [39m[0m
+
+[4m[34mlibs\core\http\src\index.ts:5:26[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/http/src/middlewares/validate.middleware.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 3 | [39m[36mexport[39m { [33mRequestContext[39m } from [32m'./RequestContext'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { errorMiddleware } from [32m'./middlewares/error.middleware'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 | [39m[36mexport[39m { validate } from [32m'./middlewares/validate.middleware'[39m[33m;[39m
+ [90m   | [39m                         [31m[1m^[22m[39m
+ [90m 6 | [39m[36mexport[39m { requestIdMiddleware } from [32m'./middlewares/request-id.middleware'[39m[33m;[39m
+ [90m 7 | [39m[0m
+
+[4m[34mlibs\core\http\src\index.ts:6:37[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/http/src/middlewares/request-id.middleware.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 4 | [39m[36mexport[39m { errorMiddleware } from [32m'./middlewares/error.middleware'[39m[33m;[39m
+ [90m 5 | [39m[36mexport[39m { validate } from [32m'./middlewares/validate.middleware'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 6 | [39m[36mexport[39m { requestIdMiddleware } from [32m'./middlewares/request-id.middleware'[39m[33m;[39m
+ [90m   | [39m                                    [31m[1m^[22m[39m
+ [90m 7 | [39m[0m
+
+[4m[34mlibs\core\module-registry\src\index.ts:1:25[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/module-registry/src/IModule.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via './IModule' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/module-registry/src/index.ts'
+    Imported via './IModule' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/module-registry/src/index.ts'
+    Imported via './IModule' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/module-registry/src/ModuleRegistry.ts'
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mexport[39m { [33mIModule[39m } from [32m'./IModule'[39m[33m;[39m
+ [90m   | [39m                        [31m[1m^[22m[39m
+ [90m 2 | [39m[36mexport[39m type { [33mEventHandlerMap[39m } from [32m'./IModule'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { [33mModuleRegistry[39m } from [32m'./ModuleRegistry'[39m[33m;[39m
+ [90m 4 | [39m[0m
+
+[4m[34mlibs\core\module-registry\src\index.ts:3:32[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/module-registry/src/ModuleRegistry.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { [33mIModule[39m } from [32m'./IModule'[39m[33m;[39m
+ [90m 2 | [39m[36mexport[39m type { [33mEventHandlerMap[39m } from [32m'./IModule'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 3 | [39m[36mexport[39m { [33mModuleRegistry[39m } from [32m'./ModuleRegistry'[39m[33m;[39m
+ [90m   | [39m                               [31m[1m^[22m[39m
+ [90m 4 | [39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:1:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/types/Result.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mexport[39m { [33mResult[39m } from [32m'./types/Result'[39m[33m;[39m
+ [90m   | [39m                       [31m[1m^[22m[39m
+ [90m 2 | [39m[36mexport[39m type { [33mPaginationMeta[39m[33m,[39m [33mPaginatedResult[39m } from [32m'./types/Pagination'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:2:54[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/types/Pagination.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { [33mResult[39m } from [32m'./types/Result'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 | [39m[36mexport[39m type { [33mPaginationMeta[39m[33m,[39m [33mPaginatedResult[39m } from [32m'./types/Pagination'[39m[33m;[39m
+ [90m   | [39m                                                     [31m[1m^[22m[39m
+ [90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+ [90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:3:26[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/errors/AppError.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { [33mResult[39m } from [32m'./types/Result'[39m[33m;[39m
+ [90m 2 | [39m[36mexport[39m type { [33mPaginationMeta[39m[33m,[39m [33mPaginatedResult[39m } from [32m'./types/Pagination'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+ [90m   | [39m                         [31m[1m^[22m[39m
+ [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+ [90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+ [90m 6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:4:29[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/errors/DomainError.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 2 | [39m[36mexport[39m type { [33mPaginationMeta[39m[33m,[39m [33mPaginatedResult[39m } from [32m'./types/Pagination'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+ [90m   | [39m                            [31m[1m^[22m[39m
+ [90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+ [90m 6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+ [90m 7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:5:29[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/events/DomainEvent.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via './events/DomainEvent' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/index.ts'
+    Imported via '../events/DomainEvent' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/domain/AggregateRoot.ts'
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 3 | [39m[36mexport[39m { [33mAppError[39m } from [32m'./errors/AppError'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+ [90m   | [39m                            [31m[1m^[22m[39m
+ [90m 6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+ [90m 7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+ [90m 8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:6:31[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/domain/AggregateRoot.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 4 | [39m[36mexport[39m { [33mDomainError[39m } from [32m'./errors/DomainError'[39m[33m;[39m
+ [90m 5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+ [90m   | [39m                              [31m[1m^[22m[39m
+ [90m 7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+ [90m 8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+ [90m 9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:7:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/domain/Entity.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m  5 | [39m[36mexport[39m { [33mDomainEvent[39m } from [32m'./events/DomainEvent'[39m[33m;[39m
+ [90m  6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+ [90m    | [39m                       [31m[1m^[22m[39m
+ [90m  8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+ [90m  9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m
+ [90m 10 | [39m[36mexport[39m type { [33mIMapper[39m } from [32m'./interfaces/IMapper'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:8:31[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/interfaces/IUseCase.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m  6 | [39m[36mexport[39m { [33mAggregateRoot[39m } from [32m'./domain/AggregateRoot'[39m[33m;[39m
+ [90m  7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+ [90m    | [39m                              [31m[1m^[22m[39m
+ [90m  9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m
+ [90m 10 | [39m[36mexport[39m type { [33mIMapper[39m } from [32m'./interfaces/IMapper'[39m[33m;[39m
+ [90m 11 | [39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:9:34[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/interfaces/IRepository.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m  7 | [39m[36mexport[39m { [33mEntity[39m } from [32m'./domain/Entity'[39m[33m;[39m
+ [90m  8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m
+ [90m    | [39m                                 [31m[1m^[22m[39m
+ [90m 10 | [39m[36mexport[39m type { [33mIMapper[39m } from [32m'./interfaces/IMapper'[39m[33m;[39m
+ [90m 11 | [39m[0m
+
+[4m[34mlibs\shared\kernel\src\index.ts:10:30[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/kernel/src/interfaces/IMapper.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m  8 | [39m[36mexport[39m type { [33mIUseCase[39m } from [32m'./interfaces/IUseCase'[39m[33m;[39m
+ [90m  9 | [39m[36mexport[39m type { [33mIRepository[39m } from [32m'./interfaces/IRepository'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 10 | [39m[36mexport[39m type { [33mIMapper[39m } from [32m'./interfaces/IMapper'[39m[33m;[39m
+ [90m    | [39m                             [31m[1m^[22m[39m
+ [90m 11 | [39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:1:65[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/date.utils.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mexport[39m { formatISODate[33m,[39m parseISODate[33m,[39m addDays[33m,[39m isExpired } from [32m'./date.utils'[39m[33m;[39m
+ [90m   | [39m                                                                [31m[1m^[22m[39m
+ [90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:2:51[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/string.utils.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { formatISODate[33m,[39m parseISODate[33m,[39m addDays[33m,[39m isExpired } from [32m'./date.utils'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+ [90m   | [39m                                                  [31m[1m^[22m[39m
+ [90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+ [90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m
+ [90m 5 | [39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:3:38[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/crypto.utils.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mexport[39m { formatISODate[33m,[39m parseISODate[33m,[39m addDays[33m,[39m isExpired } from [32m'./date.utils'[39m[33m;[39m
+ [90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+ [90m   | [39m                                     [31m[1m^[22m[39m
+ [90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m
+ [90m 5 | [39m[0m
+
+[4m[34mlibs\shared\utils\src\index.ts:4:24[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/shared/utils/src/logger.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 2 | [39m[36mexport[39m { generateId[33m,[39m toKebabCase[33m,[39m truncate } from [32m'./string.utils'[39m[33m;[39m
+ [90m 3 | [39m[36mexport[39m { generateRandomString } from [32m'./crypto.utils'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 | [39m[36mexport[39m { [33mLogger[39m } from [32m'./logger'[39m[33m;[39m
+ [90m   | [39m                       [31m[1m^[22m[39m
+ [90m 5 | [39m[0m
+
+[4m[34mmodules\auth\src\AuthModule.ts:5:42[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/module-registry/src/index.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 3 | [39m[36mimport[39m { [33mKysely[39m } from [32m'kysely'[39m[33m;[39m
+ [90m 4 | [39m[36mimport[39m { container[33m,[39m injectable } from [32m'tsyringe'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 | [39m[36mimport[39m { [33mIModule[39m[33m,[39m [33mEventHandlerMap[39m } from [32m'@erp/core/module-registry'[39m[33m;[39m
+ [90m   | [39m                                         [31m[1m^[22m[39m
+ [90m 6 | [39m[36mimport[39m { [33mIEventBus[39m } from [32m'@erp/core/event-bus'[39m[33m;[39m
+ [90m 7 | [39m[36mimport[39m { [33mTOKENS[39m } from [32m'./application/tokens'[39m[33m;[39m
+ [90m 8 | [39m[36mimport[39m { [33mIUserRepository[39m } from [32m'./domain/repositories/IUserRepository'[39m[33m;[39m[0m
+
+[4m[34mmodules\auth\src\AuthModule.ts:6:27[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/event-bus/src/index.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via '@erp/core/event-bus' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/AuthModule.ts'
+    Imported via '@erp/core/event-bus' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/application/use-cases/LoginUseCase.ts'
+    Imported via '@erp/core/event-bus' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/application/use-cases/RegisterUseCase.ts'
+    Imported via '@erp/core/event-bus' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/application/use-cases/RefreshTokenUseCase.ts'
+    Imported via '@erp/core/event-bus' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/application/use-cases/DeactivateUserUseCase.ts'
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 4 | [39m[36mimport[39m { container[33m,[39m injectable } from [32m'tsyringe'[39m[33m;[39m
+ [90m 5 | [39m[36mimport[39m { [33mIModule[39m[33m,[39m [33mEventHandlerMap[39m } from [32m'@erp/core/module-registry'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 6 | [39m[36mimport[39m { [33mIEventBus[39m } from [32m'@erp/core/event-bus'[39m[33m;[39m
+ [90m   | [39m                          [31m[1m^[22m[39m
+ [90m 7 | [39m[36mimport[39m { [33mTOKENS[39m } from [32m'./application/tokens'[39m[33m;[39m
+ [90m 8 | [39m[36mimport[39m { [33mIUserRepository[39m } from [32m'./domain/repositories/IUserRepository'[39m[33m;[39m
+ [90m 9 | [39m[36mimport[39m { [33mIRefreshTokenRepository[39m } from [32m'./domain/repositories/IRefreshTokenRepository'[39m[33m;[39m[0m
+
+[4m[34mmodules\auth\src\infrastructure\http\AuthController.ts:3:29[39m[24m - [31m[1merror[22m[39m [90mTS6059[39m: File 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/libs/core/http/src/index.ts' is not under 'rootDir' 'modules/auth'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via '@erp/core/http' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/infrastructure/http/AuthController.ts'
+    Imported via '@erp/core/http' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/infrastructure/http/middlewares/authenticate.middleware.ts'
+    Imported via '@erp/core/http' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/infrastructure/http/AuthRoutes.ts'
+    Imported via '@erp/core/http' from file 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/modules/auth/src/infrastructure/http/middlewares/rbac.middleware.ts'
+  File is CommonJS module because 'C:/Users/ryana/Documents/RYAN/codes/GitHub/ERP/erp-services/package.json' does not have field "type"
+
+[0m [90m 1 | [39m[36mimport[39m { inject[33m,[39m injectable } from [32m'tsyringe'[39m[33m;[39m
+ [90m 2 | [39m[36mimport[39m { [33mRequest[39m[33m,[39m [33mResponse[39m } from [32m'express'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 3 | [39m[36mimport[39m { [33mApiResponse[39m } from [32m'@erp/core/http'[39m[33m;[39m
+ [90m   | [39m                            [31m[1m^[22m[39m
+ [90m 4 | [39m[36mimport[39m { mapAuthError } from [32m'./AuthErrorMapper'[39m[33m;[39m
+ [90m 5 | [39m[36mimport[39m { [33mLoginUseCase[39m } from [32m'../../application/use-cases/LoginUseCase'[39m[33m;[39m
+ [90m 6 | [39m[36mimport[39m { [33mRegisterUseCase[39m } from [32m'../../application/use-cases/RegisterUseCase'[39m[33m;[39m[0m
+
+[4m[34mmodules\auth\src\infrastructure\http\AuthController.ts:94:31[39m[24m - [31m[1merror[22m[39m [90mTS2339[39m: Property 'user' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+
+[0m [90m 92 | [39m  me [33m=[39m async (req[33m:[39m [33mRequest[39m[33m,[39m res[33m:[39m [33mResponse[39m)[33m:[39m [33mPromise[39m[33m<[39m[33mResponse[39m[33m>[39m [33m=>[39m {
+ [90m 93 | [39m    [36mreturn[39m res[33m.[39mstatus([35m200[39m)[33m.[39mjson(
+[31m[1m>[22m[39m[90m 94 | [39m      [33mApiResponse[39m[33m.[39msuccess(req[33m.[39muser[33m,[39m [32m'User retrieved successfully'[39m)[33m,[39m
+ [90m    | [39m                              [31m[1m^[22m[39m
+ [90m 95 | [39m    )[33m;[39m
+ [90m 96 | [39m  }[33m;[39m
+ [90m 97 | [39m}[0m
+
+[4m[34mmodules\auth\src\infrastructure\http\middlewares\authenticate.middleware.ts:6:10[39m[24m - [31m[1merror[22m[39m [90mTS7030[39m: Not all code paths return a value.
+
+[0m [90m 4 | [39m
+ [90m 5 | [39m[36mexport[39m [36mconst[39m createAuthMiddleware [33m=[39m (tokenService[33m:[39m [33mITokenService[39m) [33m=>[39m {
+[31m[1m>[22m[39m[90m 6 | [39m  [36mreturn[39m async (req[33m:[39m [33mRequest[39m[33m,[39m res[33m:[39m [33mResponse[39m[33m,[39m next[33m:[39m [33mNextFunction[39m) [33m=>[39m {
+ [90m   | [39m         [31m[1m^[22m[39m
+ [90m 7 | [39m    [36mconst[39m authHeader [33m=[39m req[33m.[39mheaders[33m.[39mauthorization[33m;[39m
+ [90m 8 | [39m
+ [90m 9 | [39m    [36mif[39m ([33m![39mauthHeader[33m?[39m[33m.[39mstartsWith([32m'Bearer '[39m)) {[0m
+
+[4m[34mmodules\auth\src\infrastructure\http\middlewares\authenticate.middleware.ts:19:11[39m[24m - [31m[1merror[22m[39m [90mTS2339[39m: Property 'user' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+
+[0m [90m 17 | [39m    [36mtry[39m {
+ [90m 18 | [39m      [36mconst[39m payload [33m=[39m await tokenService[33m.[39mverifyAccessToken(token)[33m;[39m
+[31m[1m>[22m[39m[90m 19 | [39m      req[33m.[39muser [33m=[39m payload[33m;[39m
+ [90m    | [39m          [31m[1m^[22m[39m
+ [90m 20 | [39m      next()[33m;[39m
+ [90m 21 | [39m    } [36mcatch[39m (err[33m:[39m any) {
+ [90m 22 | [39m      [36mconst[39m code [33m=[39m err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m [33m?[39m [32m'TOKEN_EXPIRED'[39m [33m:[39m [32m'TOKEN_INVALID'[39m[33m;[39m[0m
+
+[4m[34mmodules\auth\src\infrastructure\http\middlewares\rbac.middleware.ts:10:10[39m[24m - [31m[1merror[22m[39m [90mTS7030[39m: Not all code paths return a value.
+
+[0m [90m  8 | [39m
+ [90m  9 | [39m[36mexport[39m [36mconst[39m requirePermission [33m=[39m ([33m...[39mpermissions[33m:[39m string[]) [33m=>[39m {
+[31m[1m>[22m[39m[90m 10 | [39m  [36mreturn[39m (req[33m:[39m [33mRequest[39m[33m,[39m res[33m:[39m [33mResponse[39m[33m,[39m next[33m:[39m [33mNextFunction[39m) [33m=>[39m {
+ [90m    | [39m         [31m[1m^[22m[39m
+ [90m 11 | [39m    [36mconst[39m user [33m=[39m req[33m.[39muser as any[33m;[39m
+ [90m 12 | [39m
+ [90m 13 | [39m    [36mif[39m ([33m![39muser) {[0m
+
+[4m[34mmodules\auth\src\infrastructure\http\middlewares\rbac.middleware.ts:11:22[39m[24m - [31m[1merror[22m[39m [90mTS2339[39m: Property 'user' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+
+[0m [90m  9 | [39m[36mexport[39m [36mconst[39m requirePermission [33m=[39m ([33m...[39mpermissions[33m:[39m string[]) [33m=>[39m {
+ [90m 10 | [39m  [36mreturn[39m (req[33m:[39m [33mRequest[39m[33m,[39m res[33m:[39m [33mResponse[39m[33m,[39m next[33m:[39m [33mNextFunction[39m) [33m=>[39m {
+[31m[1m>[22m[39m[90m 11 | [39m    [36mconst[39m user [33m=[39m req[33m.[39muser as any[33m;[39m
+ [90m    | [39m                     [31m[1m^[22m[39m
+ [90m 12 | [39m
+ [90m 13 | [39m    [36mif[39m ([33m![39muser) {
+ [90m 14 | [39m      [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson([0m
+
+[4m[34mmodules\auth\src\infrastructure\repositories\KyselyRefreshTokenRepository.ts:41:27[39m[24m - [31m[1merror[22m[39m [90mTS2339[39m: Property 'createdAt' does not exist on type 'RefreshToken'.
+
+[0m [90m 39 | [39m        is_revoked[33m:[39m token[33m.[39misRevoked[33m,[39m
+ [90m 40 | [39m        expires_at[33m:[39m token[33m.[39mexpiresAt[33m,[39m
+[31m[1m>[22m[39m[90m 41 | [39m        created_at[33m:[39m token[33m.[39mcreatedAt [33m?[39m[33m?[39m [36mnew[39m [33mDate[39m()[33m,[39m
+ [90m    | [39m                          [31m[1m^[22m[39m
+ [90m 42 | [39m      })
+ [90m 43 | [39m      [33m.[39monConflict((oc) [33m=>[39m oc[33m.[39mcolumn([32m'id'[39m)[33m.[39mdoUpdateSet({
+ [90m 44 | [39m        is_used[33m:[39m (eb) [33m=>[39m eb[33m.[39mref([32m'excluded.is_used'[39m)[33m,[39m[0m
+
+[4m[34mmodules\auth\src\infrastructure\repositories\KyselyRefreshTokenRepository.ts:44:19[39m[24m - [31m[1merror[22m[39m [90mTS7006[39m: Parameter 'eb' implicitly has an 'any' type.
+
+[0m [90m 42 | [39m      })
+ [90m 43 | [39m      [33m.[39monConflict((oc) [33m=>[39m oc[33m.[39mcolumn([32m'id'[39m)[33m.[39mdoUpdateSet({
+[31m[1m>[22m[39m[90m 44 | [39m        is_used[33m:[39m (eb) [33m=>[39m eb[33m.[39mref([32m'excluded.is_used'[39m)[33m,[39m
+ [90m    | [39m                  [31m[1m^[22m[39m
+ [90m 45 | [39m        is_revoked[33m:[39m (eb) [33m=>[39m eb[33m.[39mref([32m'excluded.is_revoked'[39m)[33m,[39m
+ [90m 46 | [39m      }))
+ [90m 47 | [39m      [33m.[39mexecute()[33m;[39m[0m
+
+[4m[34mmodules\auth\src\infrastructure\repositories\KyselyRefreshTokenRepository.ts:45:22[39m[24m - [31m[1merror[22m[39m [90mTS7006[39m: Parameter 'eb' implicitly has an 'any' type.
+
+[0m [90m 43 | [39m      [33m.[39monConflict((oc) [33m=>[39m oc[33m.[39mcolumn([32m'id'[39m)[33m.[39mdoUpdateSet({
+ [90m 44 | [39m        is_used[33m:[39m (eb) [33m=>[39m eb[33m.[39mref([32m'excluded.is_used'[39m)[33m,[39m
+[31m[1m>[22m[39m[90m 45 | [39m        is_revoked[33m:[39m (eb) [33m=>[39m eb[33m.[39mref([32m'excluded.is_revoked'[39m)[33m,[39m
+ [90m    | [39m                     [31m[1m^[22m[39m
+ [90m 46 | [39m      }))
+ [90m 47 | [39m      [33m.[39mexecute()[33m;[39m
+ [90m 48 | [39m  }[0m
+
+Found 44 errors.
+
+[2m> [22m[2mnx run[22m gateway:build
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:20:7[39m[24m - [31m[1merror[22m[39m [90mTS2739[39m: Type 'ChannelModel' is missing the following properties from type 'Connection': serverProperties, expectSocketClose, sentSinceLastCheck, recvSinceLastCheck, sendMessage
+
+[0m [90m 18 | [39m
+ [90m 19 | [39m    [36mtry[39m {
+[31m[1m>[22m[39m[90m 20 | [39m      [36mthis[39m[33m.[39mconnection [33m=[39m await amqp[33m.[39mconnect([36mthis[39m[33m.[39murl)[33m;[39m
+ [90m    | [39m      [31m[1m^[22m[39m
+ [90m 21 | [39m      [36mthis[39m[33m.[39mchannel [33m=[39m await [36mthis[39m[33m.[39mconnection[33m.[39mcreateChannel()[33m;[39m
+ [90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m 23 | [39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:21:28[39m[24m - [31m[1merror[22m[39m [90mTS2531[39m: Object is possibly 'null'.
+
+[0m [90m 19 | [39m    [36mtry[39m {
+ [90m 20 | [39m      [36mthis[39m[33m.[39mconnection [33m=[39m await amqp[33m.[39mconnect([36mthis[39m[33m.[39murl)[33m;[39m
+[31m[1m>[22m[39m[90m 21 | [39m      [36mthis[39m[33m.[39mchannel [33m=[39m await [36mthis[39m[33m.[39mconnection[33m.[39mcreateChannel()[33m;[39m
+ [90m    | [39m                           [31m[1m^[22m[39m
+ [90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m 23 | [39m
+ [90m 24 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'close'[39m[33m,[39m () [33m=>[39m {[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:21:44[39m[24m - [31m[1merror[22m[39m [90mTS2339[39m: Property 'createChannel' does not exist on type 'Connection'.
+
+[0m [90m 19 | [39m    [36mtry[39m {
+ [90m 20 | [39m      [36mthis[39m[33m.[39mconnection [33m=[39m await amqp[33m.[39mconnect([36mthis[39m[33m.[39murl)[33m;[39m
+[31m[1m>[22m[39m[90m 21 | [39m      [36mthis[39m[33m.[39mchannel [33m=[39m await [36mthis[39m[33m.[39mconnection[33m.[39mcreateChannel()[33m;[39m
+ [90m    | [39m                                           [31m[1m^[22m[39m
+ [90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m 23 | [39m
+ [90m 24 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'close'[39m[33m,[39m () [33m=>[39m {[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:22:13[39m[24m - [31m[1merror[22m[39m [90mTS2531[39m: Object is possibly 'null'.
+
+[0m [90m 20 | [39m      [36mthis[39m[33m.[39mconnection [33m=[39m await amqp[33m.[39mconnect([36mthis[39m[33m.[39murl)[33m;[39m
+ [90m 21 | [39m      [36mthis[39m[33m.[39mchannel [33m=[39m await [36mthis[39m[33m.[39mconnection[33m.[39mcreateChannel()[33m;[39m
+[31m[1m>[22m[39m[90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m    | [39m            [31m[1m^[22m[39m
+ [90m 23 | [39m
+ [90m 24 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'close'[39m[33m,[39m () [33m=>[39m {
+ [90m 25 | [39m        [36mthis[39m[33m.[39mchannel [33m=[39m [36mnull[39m[33m;[39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:24:7[39m[24m - [31m[1merror[22m[39m [90mTS2531[39m: Object is possibly 'null'.
+
+[0m [90m 22 | [39m      await [36mthis[39m[33m.[39mchannel[33m.[39massertExchange([33mEXCHANGE_NAME[39m[33m,[39m [32m'topic'[39m[33m,[39m { durable[33m:[39m [36mtrue[39m })[33m;[39m
+ [90m 23 | [39m
+[31m[1m>[22m[39m[90m 24 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'close'[39m[33m,[39m () [33m=>[39m {
+ [90m    | [39m      [31m[1m^[22m[39m
+ [90m 25 | [39m        [36mthis[39m[33m.[39mchannel [33m=[39m [36mnull[39m[33m;[39m
+ [90m 26 | [39m        [36mthis[39m[33m.[39mconnection [33m=[39m [36mnull[39m[33m;[39m
+ [90m 27 | [39m        [36mthis[39m[33m.[39mscheduleReconnect()[33m;[39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:30:7[39m[24m - [31m[1merror[22m[39m [90mTS2531[39m: Object is possibly 'null'.
+
+[0m [90m 28 | [39m      })[33m;[39m
+ [90m 29 | [39m
+[31m[1m>[22m[39m[90m 30 | [39m      [36mthis[39m[33m.[39mconnection[33m.[39mon([32m'error'[39m[33m,[39m (err) [33m=>[39m {
+ [90m    | [39m      [31m[1m^[22m[39m
+ [90m 31 | [39m        [33mLogger[39m[33m.[39merror([32m'RabbitMQ connection error'[39m[33m,[39m { error[33m:[39m err[33m.[39mmessage })[33m;[39m
+ [90m 32 | [39m      })[33m;[39m
+ [90m 33 | [39m[0m
+
+[4m[34mlibs\core\event-bus\src\RabbitMQEventBus.ts:103:28[39m[24m - [31m[1merror[22m[39m [90mTS2339[39m: Property 'close' does not exist on type 'Connection'.
+
+[0m [90m 101 | [39m    }
+ [90m 102 | [39m    await [36mthis[39m[33m.[39mchannel[33m?[39m[33m.[39mclose()[33m;[39m
+[31m[1m>[22m[39m[90m 103 | [39m    await [36mthis[39m[33m.[39mconnection[33m?[39m[33m.[39mclose()[33m;[39m
+ [90m     | [39m                           [31m[1m^[22m[39m
+ [90m 104 | [39m    [36mthis[39m[33m.[39mchannel [33m=[39m [36mnull[39m[33m;[39m
+ [90m 105 | [39m    [36mthis[39m[33m.[39mconnection [33m=[39m [36mnull[39m[33m;[39m
+ [90m 106 | [39m  }[0m
+
+[4m[34mmodules\auth\src\infrastructure\http\AuthController.ts:94:31[39m[24m - [31m[1merror[22m[39m [90mTS2339[39m: Property 'user' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+
+[0m [90m 92 | [39m  me [33m=[39m async (req[33m:[39m [33mRequest[39m[33m,[39m res[33m:[39m [33mResponse[39m)[33m:[39m [33mPromise[39m[33m<[39m[33mResponse[39m[33m>[39m [33m=>[39m {
+ [90m 93 | [39m    [36mreturn[39m res[33m.[39mstatus([35m200[39m)[33m.[39mjson(
+[31m[1m>[22m[39m[90m 94 | [39m      [33mApiResponse[39m[33m.[39msuccess(req[33m.[39muser[33m,[39m [32m'User retrieved successfully'[39m)[33m,[39m
+ [90m    | [39m                              [31m[1m^[22m[39m
+ [90m 95 | [39m    )[33m;[39m
+ [90m 96 | [39m  }[33m;[39m
+ [90m 97 | [39m}[0m
+
+[4m[34mmodules\auth\src\infrastructure\http\middlewares\authenticate.middleware.ts:6:10[39m[24m - [31m[1merror[22m[39m [90mTS7030[39m: Not all code paths return a value.
+
+[0m [90m 4 | [39m
+ [90m 5 | [39m[36mexport[39m [36mconst[39m createAuthMiddleware [33m=[39m (tokenService[33m:[39m [33mITokenService[39m) [33m=>[39m {
+[31m[1m>[22m[39m[90m 6 | [39m  [36mreturn[39m async (req[33m:[39m [33mRequest[39m[33m,[39m res[33m:[39m [33mResponse[39m[33m,[39m next[33m:[39m [33mNextFunction[39m) [33m=>[39m {
+ [90m   | [39m         [31m[1m^[22m[39m
+ [90m 7 | [39m    [36mconst[39m authHeader [33m=[39m req[33m.[39mheaders[33m.[39mauthorization[33m;[39m
+ [90m 8 | [39m
+ [90m 9 | [39m    [36mif[39m ([33m![39mauthHeader[33m?[39m[33m.[39mstartsWith([32m'Bearer '[39m)) {[0m
+
+[4m[34mmodules\auth\src\infrastructure\http\middlewares\authenticate.middleware.ts:19:11[39m[24m - [31m[1merror[22m[39m [90mTS2339[39m: Property 'user' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+
+[0m [90m 17 | [39m    [36mtry[39m {
+ [90m 18 | [39m      [36mconst[39m payload [33m=[39m await tokenService[33m.[39mverifyAccessToken(token)[33m;[39m
+[31m[1m>[22m[39m[90m 19 | [39m      req[33m.[39muser [33m=[39m payload[33m;[39m
+ [90m    | [39m          [31m[1m^[22m[39m
+ [90m 20 | [39m      next()[33m;[39m
+ [90m 21 | [39m    } [36mcatch[39m (err[33m:[39m any) {
+ [90m 22 | [39m      [36mconst[39m code [33m=[39m err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m [33m?[39m [32m'TOKEN_EXPIRED'[39m [33m:[39m [32m'TOKEN_INVALID'[39m[33m;[39m[0m
+
+[4m[34mmodules\auth\src\infrastructure\repositories\KyselyRefreshTokenRepository.ts:41:27[39m[24m - [31m[1merror[22m[39m [90mTS2339[39m: Property 'createdAt' does not exist on type 'RefreshToken'.
+
+[0m [90m 39 | [39m        is_revoked[33m:[39m token[33m.[39misRevoked[33m,[39m
+ [90m 40 | [39m        expires_at[33m:[39m token[33m.[39mexpiresAt[33m,[39m
+[31m[1m>[22m[39m[90m 41 | [39m        created_at[33m:[39m token[33m.[39mcreatedAt [33m?[39m[33m?[39m [36mnew[39m [33mDate[39m()[33m,[39m
+ [90m    | [39m                          [31m[1m^[22m[39m
+ [90m 42 | [39m      })
+ [90m 43 | [39m      [33m.[39monConflict((oc) [33m=>[39m oc[33m.[39mcolumn([32m'id'[39m)[33m.[39mdoUpdateSet({
+ [90m 44 | [39m        is_used[33m:[39m (eb) [33m=>[39m eb[33m.[39mref([32m'excluded.is_used'[39m)[33m,[39m[0m
+
+[4m[34mmodules\auth\src\infrastructure\repositories\KyselyRefreshTokenRepository.ts:44:19[39m[24m - [31m[1merror[22m[39m [90mTS7006[39m: Parameter 'eb' implicitly has an 'any' type.
+
+[0m [90m 42 | [39m      })
+ [90m 43 | [39m      [33m.[39monConflict((oc) [33m=>[39m oc[33m.[39mcolumn([32m'id'[39m)[33m.[39mdoUpdateSet({
+[31m[1m>[22m[39m[90m 44 | [39m        is_used[33m:[39m (eb) [33m=>[39m eb[33m.[39mref([32m'excluded.is_used'[39m)[33m,[39m
+ [90m    | [39m                  [31m[1m^[22m[39m
+ [90m 45 | [39m        is_revoked[33m:[39m (eb) [33m=>[39m eb[33m.[39mref([32m'excluded.is_revoked'[39m)[33m,[39m
+ [90m 46 | [39m      }))
+ [90m 47 | [39m      [33m.[39mexecute()[33m;[39m[0m
+
+[4m[34mmodules\auth\src\infrastructure\repositories\KyselyRefreshTokenRepository.ts:45:22[39m[24m - [31m[1merror[22m[39m [90mTS7006[39m: Parameter 'eb' implicitly has an 'any' type.
+
+[0m [90m 43 | [39m      [33m.[39monConflict((oc) [33m=>[39m oc[33m.[39mcolumn([32m'id'[39m)[33m.[39mdoUpdateSet({
+ [90m 44 | [39m        is_used[33m:[39m (eb) [33m=>[39m eb[33m.[39mref([32m'excluded.is_used'[39m)[33m,[39m
+[31m[1m>[22m[39m[90m 45 | [39m        is_revoked[33m:[39m (eb) [33m=>[39m eb[33m.[39mref([32m'excluded.is_revoked'[39m)[33m,[39m
+ [90m    | [39m                     [31m[1m^[22m[39m
+ [90m 46 | [39m      }))
+ [90m 47 | [39m      [33m.[39mexecute()[33m;[39m
+ [90m 48 | [39m  }[0m
+
+Found 13 errors.
+
+[2m[31m[39m[22m
+
+[7m[1m[31m NX [39m[22m[27m  [31mRunning target [1mbuild[22m for 9 projects failed[39m
+
+[2mFailed tasks:[22m
+
+[2m-[22m core-event-bus:build
+[2m-[22m core-http:build
+[2m-[22m core-database:build
+[2m-[22m shared-testing:build
+[2m-[22m module-auth:build
+[2m-[22m gateway:build
+

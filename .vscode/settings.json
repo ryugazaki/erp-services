@@ -1,0 +1,8 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "jest.jestCommandLine": "npx jest --config modules/auth/jest.config.ts",
+  "jest.rootPath": ".",
+  "jest.detectOpenHandles": true,
+  "jest.showCoverageOnLoad": false
+}

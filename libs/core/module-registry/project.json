@@ -1,0 +1,17 @@
+{
+  "name": "core-module-registry",
+  "tags": ["scope:core", "type:infrastructure"],
+  "sourceRoot": "libs/core/module-registry/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/core/module-registry",
+        "main": "libs/core/module-registry/src/index.ts",
+        "tsConfig": "libs/core/module-registry/tsconfig.lib.json",
+        "platform": "node"
+      }
+    }
+  }
+}

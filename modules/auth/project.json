@@ -1,0 +1,24 @@
+{
+  "name": "module-auth",
+  "tags": ["scope:module", "domain:auth", "type:module"],
+  "sourceRoot": "modules/auth/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/modules/auth",
+        "main": "modules/auth/src/index.ts",
+        "tsConfig": "modules/auth/tsconfig.lib.json",
+        "platform": "node"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "modules/auth/jest.config.ts"
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "core-event-bus",
+  "tags": ["scope:core", "type:infrastructure"],
+  "sourceRoot": "libs/core/event-bus/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/core/event-bus",
+        "main": "libs/core/event-bus/src/index.ts",
+        "tsConfig": "libs/core/event-bus/tsconfig.lib.json",
+        "platform": "node"
+      }
+    }
+  }
+}

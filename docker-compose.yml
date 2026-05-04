@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: erp-postgres
+    environment:
+      POSTGRES_USER: erp_admin
+      POSTGRES_PASSWORD: erp_secret_dev
+      POSTGRES_DB: erp_system
+    ports:
+      - '5432:5432'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: erp-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: erp_rabbit
+      RABBITMQ_DEFAULT_PASS: erp_rabbit_dev
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+
+volumes:
+  pg_data:

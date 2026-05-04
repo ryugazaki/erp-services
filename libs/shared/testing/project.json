@@ -1,0 +1,17 @@
+{
+  "name": "shared-testing",
+  "tags": ["scope:core", "type:testing"],
+  "sourceRoot": "libs/shared/testing/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/shared/testing",
+        "main": "libs/shared/testing/src/index.ts",
+        "tsConfig": "libs/shared/testing/tsconfig.lib.json",
+        "platform": "node"
+      }
+    }
+  }
+}

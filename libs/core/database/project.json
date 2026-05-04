@@ -1,0 +1,17 @@
+{
+  "name": "core-database",
+  "tags": ["scope:core", "type:infrastructure"],
+  "sourceRoot": "libs/core/database/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/core/database",
+        "main": "libs/core/database/src/index.ts",
+        "tsConfig": "libs/core/database/tsconfig.lib.json",
+        "platform": "node"
+      }
+    }
+  }
+}

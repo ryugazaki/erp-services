@@ -1,0 +1,17 @@
+{
+  "name": "core-http",
+  "tags": ["scope:core", "type:infrastructure"],
+  "sourceRoot": "libs/core/http/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/core/http",
+        "main": "libs/core/http/src/index.ts",
+        "tsConfig": "libs/core/http/tsconfig.lib.json",
+        "platform": "node"
+      }
+    }
+  }
+}
