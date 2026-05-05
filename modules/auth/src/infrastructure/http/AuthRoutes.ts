@@ -22,7 +22,7 @@ export function createAuthRoutes(
 
   /**
    * @swagger
-   * /login:
+   * /v1/auth/login:
    *   post:
    *     tags: [Auth]
    *     summary: Login with email and password
@@ -67,7 +67,7 @@ export function createAuthRoutes(
 
   /**
    * @swagger
-   * /register:
+   * /v1/auth/register:
    *   post:
    *     tags: [Auth]
    *     summary: Register a new user
@@ -104,7 +104,7 @@ export function createAuthRoutes(
 
   /**
    * @swagger
-   * /refresh:
+   * /v1/auth/refresh:
    *   post:
    *     tags: [Auth]
    *     summary: Refresh access token
@@ -139,7 +139,7 @@ export function createAuthRoutes(
 
   /**
    * @swagger
-   * /logout:
+   * /v1/auth/logout:
    *   post:
    *     tags: [Auth]
    *     summary: Logout
@@ -163,7 +163,7 @@ export function createAuthRoutes(
 
   /**
    * @swagger
-   * /me:
+   * /v1/auth/me:
    *   get:
    *     tags: [Auth]
    *     summary: Get current user profile

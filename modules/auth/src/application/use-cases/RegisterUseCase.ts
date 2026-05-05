@@ -26,7 +26,7 @@ export class RegisterUseCase implements IUseCase<RegisterDTO, Result<RegisterRes
     const userResult = User.create({
       email: dto.email,
       password: dto.password,
-      role: dto.role,
+      role: 'EMPLOYEE',
     });
     if (userResult.isFailure()) return Result.fail(userResult.getError());
 

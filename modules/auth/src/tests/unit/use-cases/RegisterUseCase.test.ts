@@ -17,7 +17,6 @@ describe('RegisterUseCase', () => {
     const result = await useCase.execute({
       email: 'new@test.com',
       password: 'MyP@ssw0rd!',
-      role: 'EMPLOYEE',
     });
     expect(result.isSuccess()).toBe(true);
     expect(result.getValue().email).toBe('new@test.com');
@@ -35,7 +34,6 @@ describe('RegisterUseCase', () => {
     const result = await useCase.execute({
       email: 'existing@test.com',
       password: 'MyP@ssw0rd!',
-      role: 'EMPLOYEE',
     });
     expect(result.isFailure()).toBe(true);
     expect(result.getError()).toBe('EMAIL_ALREADY_EXISTS');
@@ -45,7 +43,6 @@ describe('RegisterUseCase', () => {
     await useCase.execute({
       email: 'new@test.com',
       password: 'MyP@ssw0rd!',
-      role: 'EMPLOYEE',
     });
     expect(eventBus.published.length).toBe(1);
     expect(eventBus.published[0].eventType).toBe('auth.user.created');
@@ -55,7 +52,6 @@ describe('RegisterUseCase', () => {
     await useCase.execute({
       email: 'new@test.com',
       password: 'MyP@ssw0rd!',
-      role: 'EMPLOYEE',
     });
     const { user, hash } = userRepo.getSaved();
     expect(user).toBeDefined();

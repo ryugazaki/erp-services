@@ -62,11 +62,10 @@ const options: swaggerJsdoc.Options = {
         },
         RegisterRequest: {
           type: 'object',
-          required: ['email', 'password', 'role'],
+          required: ['email', 'password'],
           properties: {
             email: { type: 'string', format: 'email', example: 'user@example.com' },
             password: { type: 'string', format: 'password', minLength: 8, example: 'MyP@ssw0rd!' },
-            role: { type: 'string', enum: ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'EMPLOYEE', 'GUEST'], example: 'EMPLOYEE' },
           },
         },
         LogoutRequest: {
@@ -95,8 +94,7 @@ const options: swaggerJsdoc.Options = {
     },
   },
   apis: [
-    'modules/*/src/infrastructure/http/*Routes.ts',
-    'modules/*/src/infrastructure/http/*Routes.*.ts',
+    './modules/*/src/infrastructure/http/*Routes.ts',
   ],
 };
 

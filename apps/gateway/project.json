@@ -10,7 +10,8 @@
         "outputPath": "dist/apps/gateway",
         "main": "apps/gateway/src/main.ts",
         "tsConfig": "apps/gateway/tsconfig.app.json",
-        "assets": ["apps/gateway/src/**/*.json"]
+        "assets": ["apps/gateway/src/**/*.json"],
+        "format": ["cjs"]
       }
     },
     "serve": {
