@@ -3,45 +3,38 @@ import { Kysely, sql } from 'kysely';
 export async function up(db: Kysely<any>): Promise<void> {
   await sql`CREATE SCHEMA IF NOT EXISTS auth`.execute(db);
 
-  await db.schema
-    .createTable('auth.users')
-    .addColumn('id', 'uuid', (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
-    .addColumn('email', 'varchar(255)', (col) => col.notNull().unique())
-    .addColumn('password_hash', 'varchar(255)', (col) => col.notNull())
-    .addColumn('role', 'varchar(50)', (col) => col.notNull())
-    .addColumn('is_active', 'boolean', (col) => col.notNull().defaultTo(true))
-    .addColumn('created_at', 'timestamp', (col) => col.notNull().defaultTo(sql`now()`))
-    .addColumn('updated_at', 'timestamp', (col) => col.notNull().defaultTo(sql`now()`))
-    .addColumn('deleted_at', 'timestamp')
-    .execute();
+  await sql`
+    CREATE TABLE auth.users (
+      id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      email       varchar(255) NOT NULL UNIQUE,
+      password_hash varchar(255) NOT NULL,
+      role        varchar(50) NOT NULL,
+      is_active   boolean NOT NULL DEFAULT true,
+      created_at  timestamp NOT NULL DEFAULT now(),
+      updated_at  timestamp NOT NULL DEFAULT now(),
+      deleted_at  timestamp
+    )
+  `.execute(db);
 
-  await db.schema
-    .createTable('auth.refresh_tokens')
-    .addColumn('id', 'uuid', (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
-    .addColumn('user_id', 'uuid', (col) => col.notNull().references('auth.users(id)'))
-    .addColumn('family_id', 'uuid', (col) => col.notNull())
-    .addColumn('parent_token_id', 'uuid')
-    .addColumn('is_used', 'boolean', (col) => col.notNull().defaultTo(false))
-    .addColumn('is_revoked', 'boolean', (col) => col.notNull().defaultTo(false))
-    .addColumn('expires_at', 'timestamp', (col) => col.notNull())
-    .addColumn('created_at', 'timestamp', (col) => col.notNull().defaultTo(sql`now()`))
-    .execute();
+  await sql`
+    CREATE TABLE auth.refresh_tokens (
+      id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id         uuid NOT NULL REFERENCES auth.users(id),
+      family_id       uuid NOT NULL,
+      parent_token_id uuid,
+      is_used         boolean NOT NULL DEFAULT false,
+      is_revoked      boolean NOT NULL DEFAULT false,
+      expires_at      timestamp NOT NULL,
+      created_at      timestamp NOT NULL DEFAULT now()
+    )
+  `.execute(db);
 
-  await db.schema
-    .createIndex('idx_refresh_tokens_family_id')
-    .on('auth.refresh_tokens')
-    .column('family_id')
-    .execute();
-
-  await db.schema
-    .createIndex('idx_refresh_tokens_user_id')
-    .on('auth.refresh_tokens')
-    .column('user_id')
-    .execute();
+  await sql`CREATE INDEX idx_refresh_tokens_family_id ON auth.refresh_tokens (family_id)`.execute(db);
+  await sql`CREATE INDEX idx_refresh_tokens_user_id ON auth.refresh_tokens (user_id)`.execute(db);
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema.dropTable('auth.refresh_tokens').ifExists().execute();
-  await db.schema.dropTable('auth.users').ifExists().execute();
+  await sql`DROP TABLE IF EXISTS auth.refresh_tokens`.execute(db);
+  await sql`DROP TABLE IF EXISTS auth.users`.execute(db);
   await sql`DROP SCHEMA IF EXISTS auth CASCADE`.execute(db);
 }
