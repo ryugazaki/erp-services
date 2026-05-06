@@ -192,6 +192,17 @@ const options: swaggerJsdoc.Options = {
             isActive: { type: 'boolean', example: true },
           },
         },
+        LeaveBalance: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            leaveTypeId: { type: 'string', format: 'uuid' },
+            year: { type: 'integer', example: 2026 },
+            totalDays: { type: 'number', example: 12 },
+            usedDays: { type: 'number', example: 3 },
+            remainingDays: { type: 'number', example: 9 },
+          },
+        },
         CreateDepartmentRequest: {
           type: 'object',
           required: ['name', 'code'],

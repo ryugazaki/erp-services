@@ -23,18 +23,21 @@ import { CreateEmployeeUseCase } from './application/use-cases/employee/CreateEm
 import { GetEmployeeUseCase } from './application/use-cases/employee/GetEmployeeUseCase';
 import { ListEmployeesUseCase } from './application/use-cases/employee/ListEmployeesUseCase';
 import { UpdateEmployeeUseCase } from './application/use-cases/employee/UpdateEmployeeUseCase';
+import { ChangeEmployeeStatusUseCase } from './application/use-cases/employee/ChangeEmployeeStatusUseCase';
 import { ApplyLeaveUseCase } from './application/use-cases/leave/ApplyLeaveUseCase';
 import { ApproveLeaveUseCase } from './application/use-cases/leave/ApproveLeaveUseCase';
 import { RejectLeaveUseCase } from './application/use-cases/leave/RejectLeaveUseCase';
 import { CancelLeaveUseCase } from './application/use-cases/leave/CancelLeaveUseCase';
 import { ListLeavesUseCase } from './application/use-cases/leave/ListLeavesUseCase';
 import { GetLeaveUseCase } from './application/use-cases/leave/GetLeaveUseCase';
+import { GetEmployeeLeaveBalancesUseCase } from './application/use-cases/leave-balance/GetEmployeeLeaveBalancesUseCase';
 import { CreateLeaveTypeUseCase } from './application/use-cases/leave-type/CreateLeaveTypeUseCase';
 import { ListLeaveTypesUseCase } from './application/use-cases/leave-type/ListLeaveTypesUseCase';
 import { CreateDepartmentUseCase } from './application/use-cases/department/CreateDepartmentUseCase';
 import { GetDepartmentUseCase } from './application/use-cases/department/GetDepartmentUseCase';
 import { ListDepartmentsUseCase } from './application/use-cases/department/ListDepartmentsUseCase';
 import { UpdateDepartmentUseCase } from './application/use-cases/department/UpdateDepartmentUseCase';
+import { ChangeDepartmentStatusUseCase } from './application/use-cases/department/ChangeDepartmentStatusUseCase';
 import { EmployeeController } from './infrastructure/http/EmployeeController';
 import { LeaveController } from './infrastructure/http/LeaveController';
 import { LeaveTypeController } from './infrastructure/http/LeaveTypeController';
@@ -87,6 +90,7 @@ export class HRModule implements IModule {
     const getEmployeeUseCase = new GetEmployeeUseCase(employeeRepo);
     const listEmployeesUseCase = new ListEmployeesUseCase(employeeRepo);
     const updateEmployeeUseCase = new UpdateEmployeeUseCase(employeeRepo, eventBus);
+    const changeEmployeeStatusUseCase = new ChangeEmployeeStatusUseCase(employeeRepo, eventBus);
 
     const applyLeaveUseCase = new ApplyLeaveUseCase(employeeRepo, leaveTypeRepo, leaveBalanceRepo, leaveRepo, eventBus);
     const approveLeaveUseCase = new ApproveLeaveUseCase(leaveRepo, eventBus);
@@ -94,6 +98,7 @@ export class HRModule implements IModule {
     const cancelLeaveUseCase = new CancelLeaveUseCase(leaveRepo, leaveBalanceRepo, eventBus);
     const listLeavesUseCase = new ListLeavesUseCase(leaveRepo);
     const getLeaveUseCase = new GetLeaveUseCase(leaveRepo);
+    const getEmployeeLeaveBalancesUseCase = new GetEmployeeLeaveBalancesUseCase(leaveBalanceRepo);
 
     const createLeaveTypeUseCase = new CreateLeaveTypeUseCase(leaveTypeRepo);
     const listLeaveTypesUseCase = new ListLeaveTypesUseCase(leaveTypeRepo);
@@ -103,11 +108,12 @@ export class HRModule implements IModule {
     const getDepartmentUseCase = new GetDepartmentUseCase(departmentRepo);
     const listDepartmentsUseCase = new ListDepartmentsUseCase(departmentRepo);
     const updateDepartmentUseCase = new UpdateDepartmentUseCase(departmentRepo);
+    const changeDepartmentStatusUseCase = new ChangeDepartmentStatusUseCase(departmentRepo);
 
-    const employeeController = new EmployeeController(createEmployeeUseCase, getEmployeeUseCase, listEmployeesUseCase, updateEmployeeUseCase);
-    const leaveController = new LeaveController(applyLeaveUseCase, approveLeaveUseCase, rejectLeaveUseCase, cancelLeaveUseCase, listLeavesUseCase, getLeaveUseCase);
+    const employeeController = new EmployeeController(createEmployeeUseCase, getEmployeeUseCase, listEmployeesUseCase, updateEmployeeUseCase, changeEmployeeStatusUseCase);
+    const leaveController = new LeaveController(applyLeaveUseCase, approveLeaveUseCase, rejectLeaveUseCase, cancelLeaveUseCase, listLeavesUseCase, getLeaveUseCase, getEmployeeLeaveBalancesUseCase);
     const leaveTypeController = new LeaveTypeController(createLeaveTypeUseCase, listLeaveTypesUseCase);
-    const departmentController = new DepartmentController(createDepartmentUseCase, getDepartmentUseCase, listDepartmentsUseCase, updateDepartmentUseCase);
+    const departmentController = new DepartmentController(createDepartmentUseCase, getDepartmentUseCase, listDepartmentsUseCase, updateDepartmentUseCase, changeDepartmentStatusUseCase);
 
     const authenticate = createAuthMiddleware(tokenService);
 

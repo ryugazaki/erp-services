@@ -8,6 +8,7 @@ import { RejectLeaveUseCase } from '../../application/use-cases/leave/RejectLeav
 import { CancelLeaveUseCase } from '../../application/use-cases/leave/CancelLeaveUseCase';
 import { ListLeavesUseCase } from '../../application/use-cases/leave/ListLeavesUseCase';
 import { GetLeaveUseCase } from '../../application/use-cases/leave/GetLeaveUseCase';
+import { GetEmployeeLeaveBalancesUseCase } from '../../application/use-cases/leave-balance/GetEmployeeLeaveBalancesUseCase';
 
 @injectable()
 export class LeaveController {
@@ -18,6 +19,7 @@ export class LeaveController {
     private readonly cancelLeaveUseCase: CancelLeaveUseCase,
     private readonly listLeavesUseCase: ListLeavesUseCase,
     private readonly getLeaveUseCase: GetLeaveUseCase,
+    private readonly getEmployeeLeaveBalancesUseCase: GetEmployeeLeaveBalancesUseCase,
   ) {}
 
   apply = async (req: Request, res: Response): Promise<Response> => {
@@ -104,5 +106,21 @@ export class LeaveController {
     return res.status(200).json(
       ApiResponse.paginated(items, 'Leaves retrieved successfully', meta as any),
     );
+  };
+
+  getBalances = async (req: Request, res: Response): Promise<Response> => {
+    const year = req.query.year ? parseInt(req.query.year as string, 10) : undefined;
+
+    const result = await this.getEmployeeLeaveBalancesUseCase.execute({
+      employeeId: req.params.employeeId as string,
+      year,
+    });
+
+    if (result.isFailure()) {
+      const { status, message } = mapHrError(result.getError());
+      return res.status(status).json(ApiResponse.error(result.getError(), message, status));
+    }
+
+    return res.status(200).json(ApiResponse.success(result.getValue(), 'Leave balances retrieved successfully'));
   };
 }

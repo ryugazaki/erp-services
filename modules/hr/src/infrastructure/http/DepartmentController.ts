@@ -5,6 +5,7 @@ import { CreateDepartmentUseCase } from '../../application/use-cases/department/
 import { GetDepartmentUseCase } from '../../application/use-cases/department/GetDepartmentUseCase';
 import { ListDepartmentsUseCase } from '../../application/use-cases/department/ListDepartmentsUseCase';
 import { UpdateDepartmentUseCase } from '../../application/use-cases/department/UpdateDepartmentUseCase';
+import { ChangeDepartmentStatusUseCase } from '../../application/use-cases/department/ChangeDepartmentStatusUseCase';
 
 export class DepartmentController {
   constructor(
@@ -12,6 +13,7 @@ export class DepartmentController {
     private readonly getDepartmentUseCase: GetDepartmentUseCase,
     private readonly listDepartmentsUseCase: ListDepartmentsUseCase,
     private readonly updateDepartmentUseCase: UpdateDepartmentUseCase,
+    private readonly changeDepartmentStatusUseCase: ChangeDepartmentStatusUseCase,
   ) {}
 
   create = async (req: Request, res: Response): Promise<Response> => {
@@ -61,5 +63,33 @@ export class DepartmentController {
     }
 
     return res.status(200).json(ApiResponse.success(result.getValue(), 'Department updated successfully'));
+  };
+
+  activate = async (req: Request, res: Response): Promise<Response> => {
+    const result = await this.changeDepartmentStatusUseCase.execute({
+      id: req.params.id as string,
+      action: 'activate',
+    });
+
+    if (result.isFailure()) {
+      const { status, message } = mapHrError(result.getError());
+      return res.status(status).json(ApiResponse.error(result.getError(), message, status));
+    }
+
+    return res.status(200).json(ApiResponse.success(result.getValue(), 'Department activated successfully'));
+  };
+
+  deactivate = async (req: Request, res: Response): Promise<Response> => {
+    const result = await this.changeDepartmentStatusUseCase.execute({
+      id: req.params.id as string,
+      action: 'deactivate',
+    });
+
+    if (result.isFailure()) {
+      const { status, message } = mapHrError(result.getError());
+      return res.status(status).json(ApiResponse.error(result.getError(), message, status));
+    }
+
+    return res.status(200).json(ApiResponse.success(result.getValue(), 'Department deactivated successfully'));
   };
 }

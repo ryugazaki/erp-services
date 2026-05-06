@@ -6,6 +6,7 @@ import { LeaveTypeController } from './LeaveTypeController';
 import { DepartmentController } from './DepartmentController';
 import { CreateEmployeeSchema } from '../../application/dtos/employee/CreateEmployeeDTO';
 import { UpdateEmployeeSchema } from '../../application/dtos/employee/UpdateEmployeeDTO';
+import { ChangeEmployeeStatusSchema } from '../../application/dtos/employee/ChangeEmployeeStatusDTO';
 import { ListEmployeesSchema } from '../../application/dtos/employee/ListEmployeesDTO';
 import { ApplyLeaveSchema } from '../../application/dtos/leave/ApplyLeaveDTO';
 import { ReviewLeaveSchema } from '../../application/dtos/leave/ReviewLeaveDTO';
@@ -212,6 +213,62 @@ export function createHrRoutes(
     requirePermission('hr:employees:write'),
     validate(UpdateEmployeeSchema),
     employeeController.update,
+  );
+
+  /**
+   * @swagger
+   * /v1/hr/employees/{id}/status:
+   *   put:
+   *     tags: [HR]
+   *     summary: Change employee status
+   *     security: [{ bearerAuth: [] }]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string, format: uuid }
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required: [status]
+   *             properties:
+   *               status:
+   *                 type: string
+   *                 enum: [ACTIVE, INACTIVE, SUSPENDED, TERMINATED]
+   *     responses:
+   *       200:
+   *         description: Employee status changed successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/SuccessResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/Employee'
+   *       400:
+   *         description: Invalid status value
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *       404:
+   *         description: Employee not found
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   */
+  router.put(
+    '/employees/:id/status',
+    authenticate,
+    requirePermission('hr:employees:write'),
+    validate(ChangeEmployeeStatusSchema),
+    employeeController.changeStatus,
   );
 
   // ─── Leave Routes ─────────────────────────────────────────────────────────
@@ -489,6 +546,52 @@ export function createHrRoutes(
     leaveController.cancel,
   );
 
+  // ─── Leave Balance Routes ──────────────────────────────────────────────────
+
+  /**
+   * @swagger
+   * /v1/hr/employees/{employeeId}/leave-balances:
+   *   get:
+   *     tags: [HR]
+   *     summary: Get leave balances for an employee
+   *     security: [{ bearerAuth: [] }]
+   *     parameters:
+   *       - in: path
+   *         name: employeeId
+   *         required: true
+   *         schema: { type: string, format: uuid }
+   *       - in: query
+   *         name: year
+   *         schema: { type: integer, example: 2026 }
+   *         description: Defaults to current year
+   *     responses:
+   *       200:
+   *         description: List of leave balances
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/SuccessResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       type: array
+   *                       items:
+   *                         $ref: '#/components/schemas/LeaveBalance'
+   *       404:
+   *         description: Employee not found
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   */
+  router.get(
+    '/employees/:employeeId/leave-balances',
+    authenticate,
+    requirePermission('hr:leaves:read'),
+    leaveController.getBalances,
+  );
+
   // ─── Department Routes ────────────────────────────────────────────────────
 
   /**
@@ -669,6 +772,78 @@ export function createHrRoutes(
     requirePermission('hr:departments:write'),
     validate(UpdateDepartmentSchema),
     departmentController.update,
+  );
+
+  /**
+   * @swagger
+   * /v1/hr/departments/{id}/activate:
+   *   put:
+   *     tags: [HR]
+   *     summary: Activate a department
+   *     security: [{ bearerAuth: [] }]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string, format: uuid }
+   *     responses:
+   *       200:
+   *         description: Department activated successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/SuccessResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/Department'
+   *       404:
+   *         description: Department not found
+   *       409:
+   *         description: Department already active
+   */
+  router.put(
+    '/departments/:id/activate',
+    authenticate,
+    requirePermission('hr:departments:write'),
+    departmentController.activate,
+  );
+
+  /**
+   * @swagger
+   * /v1/hr/departments/{id}/deactivate:
+   *   put:
+   *     tags: [HR]
+   *     summary: Deactivate a department
+   *     security: [{ bearerAuth: [] }]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string, format: uuid }
+   *     responses:
+   *       200:
+   *         description: Department deactivated successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/SuccessResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/Department'
+   *       404:
+   *         description: Department not found
+   *       409:
+   *         description: Department already inactive
+   */
+  router.put(
+    '/departments/:id/deactivate',
+    authenticate,
+    requirePermission('hr:departments:write'),
+    departmentController.deactivate,
   );
 
   // ─── Leave Type Routes ────────────────────────────────────────────────────
