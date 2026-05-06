@@ -1,0 +1,34 @@
+{
+  "name": "module-inventory",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "modules/inventory/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild:lib",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/modules/inventory",
+        "main": "modules/inventory/src/index.ts",
+        "tsConfig": "modules/inventory/tsconfig.lib.json",
+        "assets": [],
+        "format": ["cjs"],
+        "external": ["pg", "pg-native", "mock-aws-s3", "aws-sdk", "nock", "@mapbox/node-pre-gyp", "bcrypt", "amqplib", "kysely", "bufferutil", "utf-8-validate", "dtrace-provider"],
+        "platform": "node"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/modules/inventory"],
+      "options": {
+        "jestConfig": "modules/inventory/jest.config.ts"
+      },
+      "outputs": ["{workspaceRoot}/coverage/modules/inventory"]
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"]
+    }
+  },
+  "tags": ["scope:module", "domain:inventory", "type:module"]
+}

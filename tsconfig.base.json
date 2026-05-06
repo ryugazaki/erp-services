@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "lib": ["es2022"],
+    "lib": [
+      "es2022"
+    ],
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "noFallthroughCasesInSwitch": true,
@@ -15,17 +17,41 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "resolveJsonModule": true,
-    "typeRoots": ["./node_modules/@types", "./types"],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./types"
+    ],
     "paths": {
-      "@erp/shared/kernel": ["libs/shared/kernel/src/index.ts"],
-      "@erp/shared/utils": ["libs/shared/utils/src/index.ts"],
-      "@erp/shared/testing": ["libs/shared/testing/src/index.ts"],
-      "@erp/core/module-registry": ["libs/core/module-registry/src/index.ts"],
-      "@erp/core/event-bus": ["libs/core/event-bus/src/index.ts"],
-      "@erp/core/database": ["libs/core/database/src/index.ts"],
-      "@erp/core/http": ["libs/core/http/src/index.ts"],
-      "@erp/module/auth": ["modules/auth/src/index.ts"],
-      "@erp/module/hr": ["modules/hr/src/index.ts"]
+      "@erp/shared/kernel": [
+        "libs/shared/kernel/src/index.ts"
+      ],
+      "@erp/shared/utils": [
+        "libs/shared/utils/src/index.ts"
+      ],
+      "@erp/shared/testing": [
+        "libs/shared/testing/src/index.ts"
+      ],
+      "@erp/core/module-registry": [
+        "libs/core/module-registry/src/index.ts"
+      ],
+      "@erp/core/event-bus": [
+        "libs/core/event-bus/src/index.ts"
+      ],
+      "@erp/core/database": [
+        "libs/core/database/src/index.ts"
+      ],
+      "@erp/core/http": [
+        "libs/core/http/src/index.ts"
+      ],
+      "@erp/module/auth": [
+        "modules/auth/src/index.ts"
+      ],
+      "@erp/module/hr": [
+        "modules/hr/src/index.ts"
+      ],
+      "@erp/module/inventory": [
+        "modules/inventory/src/index.ts"
+      ]
     }
   }
 }

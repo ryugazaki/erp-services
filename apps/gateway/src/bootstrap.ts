@@ -5,6 +5,7 @@ import { RabbitMQEventBus } from '@erp/core/event-bus';
 import { ModuleRegistry } from '@erp/core/module-registry';
 import { AuthModule } from '@erp/module/auth';
 import { HRModule } from '@erp/module/hr';
+import { InventoryModule } from '@erp/module/inventory';
 import { Logger } from '@erp/shared/utils';
 import { errorMiddleware } from './app';
 import { healthRouter } from './routes/health';
@@ -44,6 +45,15 @@ export async function bootstrap(app: Express) {
 
   await hrModule.register(null);
   await registry.register(hrModule);
+
+  // Register Inventory module
+  const inventoryModule = new InventoryModule({
+    db: dbConnection.getDb(),
+    eventBus,
+  });
+
+  await inventoryModule.register(null);
+  await registry.register(inventoryModule);
 
   // Mount health route
   app.use('/health', healthRouter);

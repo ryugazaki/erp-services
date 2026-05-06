@@ -144,19 +144,116 @@ modules/auth/
 
 ## Test-Driven Development (TDD)
 
-TDD is **mandatory**.
+TDD is **mandatory** and **non-negotiable**.
 
-### Workflow
+### Core Principles
 
 ```
 RED → GREEN → REFACTOR
 ```
 
-### Rules
+### Strict Rules
 
-- Write tests **before implementation**
-- Cover all use cases
-- No feature without tests
+1. **Write tests BEFORE implementation** - No code without a failing test first
+2. **100% coverage requirement** for:
+   - Domain entities and value objects
+   - Use cases (application layer)
+   - Repository interfaces
+   - All business logic
+
+3. **Coverage goals for each layer**:
+   - **Domain**: 100% (pure business logic, zero tolerance for gaps)
+   - **Application**: 100% (use cases orchestrate business logic)
+   - **Infrastructure**: 80%+ (repositories, services, controllers)
+   - **Integration**: Critical paths only
+
+4. **Test file structure** mirrors source structure:
+   ```
+   src/domain/entities/Product.ts
+   src/domain/entities/__tests__/Product.spec.ts
+   
+   src/application/use-cases/product/CreateProductUseCase.ts
+   src/application/use-cases/product/__tests__/CreateProductUseCase.spec.ts
+   ```
+
+5. **Every use case MUST have**:
+   - ✅ Unit test file (`__tests__/UseCaseName.spec.ts`)
+   - ✅ Happy path test (success scenario)
+   - ✅ All error path tests (validation failures, not found, conflicts)
+   - ✅ Edge case tests (boundaries, null handling)
+
+6. **Mock dependencies** using:
+   - Repository interfaces → Mock implementations
+   - External services → MockEventBus, etc.
+   - Use `@erp/shared/testing` utilities when available
+
+### Test Naming Convention
+
+```typescript
+describe('UseCaseName', () => {
+  describe('execute', () => {
+    it('should return success result when valid input provided', () => {
+      // Arrange
+      // Act
+      // Assert
+    });
+
+    it('should return failure result when resource not found', () => {
+      // ...
+    });
+
+    it('should return failure result when validation fails', () => {
+      // ...
+    });
+  });
+});
+```
+
+### Required Test Scenarios per Use Case
+
+| Scenario | Description |
+|----------|-------------|
+| **Happy Path** | Valid input → success result |
+| **Validation Failures** | Each validation rule with error code |
+| **Not Found** | Resource doesn't exist (for get/update/delete) |
+| **Conflicts** | Duplicate/unique constraint violations |
+| **Business Rules** | Domain-specific constraints (stock levels, balances, etc.) |
+| **Edge Cases** | Null/undefined handling, boundary values |
+
+### No-Go Areas (What NOT to test)
+
+- ❌ Don't test framework/language features (already tested)
+- ❌ Don't test external libraries (trust the library)
+- ❌ Don't test getters/setters (no logic)
+- ❌ Don't test simple data transfer objects (DTOs)
+
+### CI/CD Gate
+
+```yaml
+# .github/workflows/test.yml
+test:
+  - npm run test:coverage
+  - Coverage threshold: 80% overall, 100% for domain/application
+  - Fail if threshold not met
+  - Report coverage to PR
+```
+
+### Pre-commit Hook (Recommended)
+
+```json
+{
+  "hooks": {
+    "pre-commit": "nx affected:test --base=HEAD~1 --head=HEAD"
+  }
+}
+```
+
+### Testing Toolbox
+
+- **Unit Tests**: Jest (configured per module)
+- **Integration Tests**: Jest with test database
+- **E2E Tests**: Playwright/Cypress (gateway level)
+- **Coverage**: Istanbul/nyc (enforced thresholds)
 
 ---
 

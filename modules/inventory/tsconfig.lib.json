@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "../../dist/modules/inventory"
+  },
+  "include": [
+    "src/application/**/*.ts",
+    "src/domain/**/*.ts",
+    "src/infrastructure/**/*.ts",
+    "src/InventoryModule.ts",
+    "src/index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests",
+    "**/__tests__",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
+}

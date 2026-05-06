@@ -1,0 +1,28 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../dist/modules/inventory-tests",
+    "types": ["jest", "node"],
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@erp/shared/kernel": ["../../libs/shared/kernel/src/index.ts"],
+      "@erp/shared/utils": ["../../libs/shared/utils/src/index.ts"],
+      "@erp/shared/testing": ["../../libs/shared/testing/src/index.ts"],
+      "@erp/core/module-registry": ["../../libs/core/module-registry/src/index.ts"],
+      "@erp/core/event-bus": ["../../libs/core/event-bus/src/index.ts"],
+      "@erp/core/database": ["../../libs/core/database/src/index.ts"],
+      "@erp/core/http": ["../../libs/core/http/src/index.ts"],
+      "@erp/module/inventory": ["src/index.ts"],
+      "@inventory/domain/*": ["src/domain/*"],
+      "@inventory/application/*": ["src/application/*"],
+      "@inventory/infrastructure/*": ["src/infrastructure/*"],
+      "@inventory/tests/*": ["src/tests/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "jest.setup.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}
