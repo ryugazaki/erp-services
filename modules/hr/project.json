@@ -1,0 +1,26 @@
+{
+  "name": "module-hr",
+  "tags": ["scope:module", "domain:hr", "type:module"],
+  "sourceRoot": "modules/hr/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/modules/hr",
+        "main": "modules/hr/src/index.ts",
+        "tsConfig": "modules/hr/tsconfig.lib.json",
+        "platform": "node",
+        "format": ["cjs"],
+        "external": ["pg", "pg-native", "mock-aws-s3", "aws-sdk", "nock", "@mapbox/node-pre-gyp", "bcrypt", "amqplib", "kysely", "bufferutil", "utf-8-validate", "dtrace-provider"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "modules/hr/jest.config.ts"
+      }
+    }
+  }
+}

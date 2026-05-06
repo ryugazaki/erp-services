@@ -7,6 +7,8 @@ const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
   ADMIN: [
     'hr:employees:read', 'hr:employees:write', 'hr:employees:delete',
     'hr:departments:read', 'hr:departments:write',
+    'hr:leaves:read', 'hr:leaves:write', 'hr:leaves:approve',
+    'hr:leave-types:read', 'hr:leave-types:write',
     'inventory:products:read', 'inventory:products:write',
     'inventory:stock:adjust',
     'finance:invoices:read', 'finance:invoices:write',
@@ -17,6 +19,8 @@ const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
   MANAGER: [
     'hr:employees:read', 'hr:employees:write',
     'hr:departments:read',
+    'hr:leaves:read', 'hr:leaves:write', 'hr:leaves:approve',
+    'hr:leave-types:read',
     'inventory:products:read',
     'inventory:stock:adjust',
     'finance:invoices:read',
@@ -26,6 +30,8 @@ const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
   ],
   EMPLOYEE: [
     'hr:employees:read',
+    'hr:leaves:read', 'hr:leaves:write',
+    'hr:leave-types:read',
     'inventory:products:read',
     'ga:assets:read',
   ],

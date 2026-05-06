@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { ApiResponse } from '@erp/core/http';
 
-function extractModule(path: string): string {
-  const parts = path.split('/').filter(Boolean);
+function extractModule(originalUrl: string): string {
+  const pathname = originalUrl.split('?')[0];
+  const parts = pathname.split('/').filter(Boolean);
   return parts[1] ?? '';
 }
 
@@ -17,7 +18,7 @@ export const requirePermission = (...permissions: string[]) => {
       return;
     }
 
-    const moduleRequired = extractModule(req.path);
+    const moduleRequired = extractModule(req.originalUrl);
     const hasModuleAccess =
       user.permissions?.includes('*') ||
       user.moduleAccess?.includes(moduleRequired);

@@ -6,3 +6,7 @@ export { UserDeactivated } from './domain/events/UserDeactivated';
 export { RefreshTokenRotated } from './domain/events/RefreshTokenRotated';
 export { TokenFamilyCompromised } from './domain/events/TokenFamilyCompromised';
 export type { UserRole } from './domain/entities/User';
+export { TOKENS as AUTH_TOKENS } from './application/tokens';
+export { createAuthMiddleware } from './infrastructure/http/middlewares/authenticate.middleware';
+export { requirePermission } from './infrastructure/http/middlewares/rbac.middleware';
+export type { ITokenService } from './application/ports/ITokenService';

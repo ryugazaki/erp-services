@@ -4,6 +4,7 @@ import { DatabaseConnection } from '@erp/core/database';
 import { RabbitMQEventBus } from '@erp/core/event-bus';
 import { ModuleRegistry } from '@erp/core/module-registry';
 import { AuthModule } from '@erp/module/auth';
+import { HRModule } from '@erp/module/hr';
 import { Logger } from '@erp/shared/utils';
 import { errorMiddleware } from './app';
 import { healthRouter } from './routes/health';
@@ -35,6 +36,15 @@ export async function bootstrap(app: Express) {
   await authModule.register(null);
   await registry.register(authModule);
 
+  // Register HR module
+  const hrModule = new HRModule({
+    db: dbConnection.getDb(),
+    eventBus,
+  });
+
+  await hrModule.register(null);
+  await registry.register(hrModule);
+
   // Mount health route
   app.use('/health', healthRouter);
 
@@ -59,6 +69,7 @@ export async function bootstrap(app: Express) {
     eventBus,
     registry,
     async close() {
+      await registry.unregister('hr');
       await registry.unregister('auth');
       await eventBus.close();
       await dbConnection.close();

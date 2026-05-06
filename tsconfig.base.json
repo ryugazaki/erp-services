@@ -24,7 +24,8 @@
       "@erp/core/event-bus": ["libs/core/event-bus/src/index.ts"],
       "@erp/core/database": ["libs/core/database/src/index.ts"],
       "@erp/core/http": ["libs/core/http/src/index.ts"],
-      "@erp/module/auth": ["modules/auth/src/index.ts"]
+      "@erp/module/auth": ["modules/auth/src/index.ts"],
+      "@erp/module/hr": ["modules/hr/src/index.ts"]
     }
   }
 }

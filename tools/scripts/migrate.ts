@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { Kysely, Migrator, MigrationProvider } from 'kysely';
+import { Kysely, Migrator } from 'kysely';
 import { PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
 import * as path from 'path';
@@ -25,13 +25,19 @@ async function main() {
     db,
     provider: {
       async getMigrations() {
-        const migrationsDir = path.join(__dirname, '../../modules/auth/src/infrastructure/database/migrations');
-        const files = fs.readdirSync(migrationsDir).filter(f => f.endsWith('.ts') || f.endsWith('.js'));
+        const modulesDir = path.join(__dirname, '../../modules');
+        const moduleDirs = fs.readdirSync(modulesDir);
         const migrations: Record<string, any> = {};
 
-        for (const file of files) {
-          const migration = require(path.join(migrationsDir, file));
-          migrations[file.replace('.ts', '').replace('.js', '')] = migration;
+        for (const mod of moduleDirs) {
+          const migrationsDir = path.join(modulesDir, mod, 'src/infrastructure/database/migrations');
+          if (!fs.existsSync(migrationsDir)) continue;
+
+          const files = fs.readdirSync(migrationsDir).filter(f => f.endsWith('.ts') || f.endsWith('.js'));
+          for (const file of files) {
+            const migration = require(path.join(migrationsDir, file));
+            migrations[file.replace('.ts', '').replace('.js', '')] = migration;
+          }
         }
 
         return migrations;
