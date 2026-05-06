@@ -19,6 +19,7 @@
 6. [Error Handling](#6-error-handling)
 7. [Module Bootstrap](#7-module-bootstrap)
 8. [Testing](#8-testing)
+9. [Future Enhancements (TODO)](#9-future-enhancements-todo)
 
 ---
 
@@ -642,3 +643,63 @@ bootstrap():
 - `tests/mocks/` — Mock implementations (MockEmployeeRepository, MockDepartmentRepository, MockLeaveRepository, MockLeaveTypeRepository, MockLeaveBalanceRepository, MockAttendanceRepository, MockEmployeeNumberGenerator, MockEventBus)
 
 **Pattern:** All mocks use in-memory Maps. Tests use `Result.isSuccess()/isFailure()` + `getValue()/getError()` (not `.value`/`.error`).
+
+---
+
+## 9. Future Enhancements (TODO)
+
+Features not yet implemented but commonly needed in HR systems:
+
+### Payroll
+- Salary management (basic salary, allowances, deductions)
+- Pay slip generation
+- Bank account info for salary transfer
+- Tax calculations (PPH 21)
+- Overtime pay calculation
+
+### Employee Documents
+- Document upload/storage (KTP, KK, NPWP, contracts, certificates)
+- Document expiration alerts
+- Document type management
+
+### Organizational Structure
+- Job position/role management (currently just a string field)
+- Reporting line (manager/subordinate relationships)
+- Organizational chart
+- Shift management
+
+### Time Management (Enhancements)
+- Overtime tracking & approval
+- Holiday/company calendar management
+- Shift assignment
+- Timesheet approval for non-clocking roles
+
+### Employee Lifecycle
+- Resignation/termination workflow
+- Exit interview
+- Probation period tracking
+- Contract renewal alerts
+
+### Performance & Training
+- Performance review/appraisal cycles
+- Training program management
+- Certification tracking
+- Skills matrix
+
+### Benefits & Insurance
+- BPJS/Kesehatan/JHT tracking
+- Insurance claims
+- Reimbursements (medical, travel, etc.)
+
+### Reporting & Analytics
+- Employee turnover report
+- Attendance analytics
+- Leave utilization report
+- Headcount planning
+
+### Notifications
+- Leave approval notifications to employees
+- Contract expiration alerts
+- Birthday reminders
+- Company announcements
+
