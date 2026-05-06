@@ -24,6 +24,8 @@ const errorMap: Record<string, ErrorMeta> = {
   LEAVE_TYPE_NAME_REQUIRED: { status: 400, message: 'Leave type name is required' },
   LEAVE_TYPE_CODE_REQUIRED: { status: 400, message: 'Leave type code is required' },
   LEAVE_TYPE_INVALID_DAYS: { status: 400, message: 'Invalid default days' },
+  LEAVE_TYPE_ALREADY_ACTIVE: { status: 409, message: 'Leave type is already active' },
+  LEAVE_TYPE_ALREADY_INACTIVE: { status: 409, message: 'Leave type is already inactive' },
 
   // Leave balance errors
   INSUFFICIENT_LEAVE_BALANCE: { status: 400, message: 'Insufficient leave balance' },
@@ -31,6 +33,12 @@ const errorMap: Record<string, ErrorMeta> = {
 
   // General validation errors
   INVALID_DATE_RANGE: { status: 400, message: 'Invalid date range' },
+
+  // Attendance errors
+  ATTENDANCE_NOT_FOUND: { status: 404, message: 'Attendance record not found' },
+  ATTENDANCE_ALREADY_CLOCKED_IN: { status: 409, message: 'Employee already clocked in today' },
+  ATTENDANCE_ALREADY_CLOCKED_OUT: { status: 409, message: 'Employee already clocked out' },
+  ATTENDANCE_NOT_CLOCKED_IN: { status: 400, message: 'Employee has not clocked in today' },
 };
 
 export function mapHrError(code: string): ErrorMeta {

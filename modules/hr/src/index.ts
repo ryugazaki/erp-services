@@ -6,3 +6,5 @@ export { LeaveApplied } from './domain/events/LeaveApplied';
 export { LeaveApproved } from './domain/events/LeaveApproved';
 export { LeaveRejected } from './domain/events/LeaveRejected';
 export { LeaveCancelled } from './domain/events/LeaveCancelled';
+export { AttendanceClockedIn } from './domain/events/AttendanceClockedIn';
+export { AttendanceClockedOut } from './domain/events/AttendanceClockedOut';

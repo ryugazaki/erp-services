@@ -4,6 +4,7 @@ import { EmployeeController } from './EmployeeController';
 import { LeaveController } from './LeaveController';
 import { LeaveTypeController } from './LeaveTypeController';
 import { DepartmentController } from './DepartmentController';
+import { AttendanceController } from './AttendanceController';
 import { CreateEmployeeSchema } from '../../application/dtos/employee/CreateEmployeeDTO';
 import { UpdateEmployeeSchema } from '../../application/dtos/employee/UpdateEmployeeDTO';
 import { ChangeEmployeeStatusSchema } from '../../application/dtos/employee/ChangeEmployeeStatusDTO';
@@ -12,9 +13,14 @@ import { ApplyLeaveSchema } from '../../application/dtos/leave/ApplyLeaveDTO';
 import { ReviewLeaveSchema } from '../../application/dtos/leave/ReviewLeaveDTO';
 import { ListLeavesSchema } from '../../application/dtos/leave/ListLeavesDTO';
 import { CreateLeaveTypeSchema } from '../../application/dtos/leave-type/CreateLeaveTypeDTO';
+import { UpdateLeaveTypeSchema } from '../../application/dtos/leave-type/UpdateLeaveTypeDTO';
 import { CreateDepartmentSchema } from '../../application/dtos/department/CreateDepartmentDTO';
 import { UpdateDepartmentSchema } from '../../application/dtos/department/UpdateDepartmentDTO';
 import { ListDepartmentsSchema } from '../../application/dtos/department/ListDepartmentsDTO';
+import { ClockInSchema } from '../../application/dtos/attendance/ClockInDTO';
+import { ClockOutSchema } from '../../application/dtos/attendance/ClockOutDTO';
+import { ListAttendancesSchema } from '../../application/dtos/attendance/ListAttendancesDTO';
+import { AttendanceSummarySchema } from '../../application/dtos/attendance/AttendanceSummaryDTO';
 
 /**
  * @swagger
@@ -28,6 +34,7 @@ export function createHrRoutes(
   leaveController: LeaveController,
   leaveTypeController: LeaveTypeController,
   departmentController: DepartmentController,
+  attendanceController: AttendanceController,
   authenticate: RequestHandler,
   requirePermission: (...permissions: string[]) => RequestHandler,
 ): Router {
@@ -921,6 +928,292 @@ export function createHrRoutes(
     authenticate,
     requirePermission('hr:leave-types:read'),
     leaveTypeController.list,
+  );
+
+  /**
+   * @swagger
+   * /v1/hr/leave-types/{id}:
+   *   put:
+   *     tags: [HR]
+   *     summary: Update a leave type
+   *     security: [{ bearerAuth: [] }]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string, format: uuid }
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/UpdateLeaveTypeRequest'
+   *     responses:
+   *       200:
+   *         description: Leave type updated successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/SuccessResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/LeaveType'
+   *       400:
+   *         description: Validation error
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *       404:
+   *         description: Leave type not found
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   */
+  router.put(
+    '/leave-types/:id',
+    authenticate,
+    requirePermission('hr:leave-types:write'),
+    validate(UpdateLeaveTypeSchema),
+    leaveTypeController.update,
+  );
+
+  /**
+   * @swagger
+   * /v1/hr/leave-types/{id}/activate:
+   *   put:
+   *     tags: [HR]
+   *     summary: Activate a leave type
+   *     security: [{ bearerAuth: [] }]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string, format: uuid }
+   *     responses:
+   *       200:
+   *         description: Leave type activated successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/SuccessResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/LeaveType'
+   *       404:
+   *         description: Leave type not found
+   *       409:
+   *         description: Leave type already active
+   */
+  router.put(
+    '/leave-types/:id/activate',
+    authenticate,
+    requirePermission('hr:leave-types:write'),
+    leaveTypeController.activate,
+  );
+
+  /**
+   * @swagger
+   * /v1/hr/leave-types/{id}/deactivate:
+   *   put:
+   *     tags: [HR]
+   *     summary: Deactivate a leave type
+   *     security: [{ bearerAuth: [] }]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string, format: uuid }
+   *     responses:
+   *       200:
+   *         description: Leave type deactivated successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/SuccessResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/LeaveType'
+   *       404:
+   *         description: Leave type not found
+   *       409:
+   *         description: Leave type already inactive
+   */
+  router.put(
+    '/leave-types/:id/deactivate',
+    authenticate,
+    requirePermission('hr:leave-types:write'),
+    leaveTypeController.deactivate,
+  );
+
+  // ─── Attendance Routes ─────────────────────────────────────────────────────
+
+  /**
+   * @swagger
+   * /v1/hr/attendances/clock-in:
+   *   post:
+   *     tags: [HR]
+   *     summary: Clock in for today
+   *     security: [{ bearerAuth: [] }]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required: [employeeId]
+   *             properties:
+   *               employeeId:
+   *                 type: string
+   *                 format: uuid
+   *     responses:
+   *       201:
+   *         description: Clocked in successfully
+   *       409:
+   *         description: Already clocked in today
+   */
+  router.post(
+    '/attendances/clock-in',
+    authenticate,
+    requirePermission('hr:attendances:write'),
+    validate(ClockInSchema),
+    attendanceController.clockIn,
+  );
+
+  /**
+   * @swagger
+   * /v1/hr/attendances/clock-out:
+   *   post:
+   *     tags: [HR]
+   *     summary: Clock out for today
+   *     security: [{ bearerAuth: [] }]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required: [employeeId]
+   *             properties:
+   *               employeeId:
+   *                 type: string
+   *                 format: uuid
+   *     responses:
+   *       200:
+   *         description: Clocked out successfully
+   *       400:
+   *         description: Not clocked in today
+   *       409:
+   *         description: Already clocked out
+   */
+  router.post(
+    '/attendances/clock-out',
+    authenticate,
+    requirePermission('hr:attendances:write'),
+    validate(ClockOutSchema),
+    attendanceController.clockOut,
+  );
+
+  /**
+   * @swagger
+   * /v1/hr/attendances/summary:
+   *   get:
+   *     tags: [HR]
+   *     summary: Get monthly attendance summary
+   *     security: [{ bearerAuth: [] }]
+   *     parameters:
+   *       - in: query
+   *         name: employeeId
+   *         required: true
+   *         schema: { type: string, format: uuid }
+   *       - in: query
+   *         name: month
+   *         required: true
+   *         schema: { type: integer, minimum: 1, maximum: 12 }
+   *       - in: query
+   *         name: year
+   *         required: true
+   *         schema: { type: integer, minimum: 2020 }
+   *     responses:
+   *       200:
+   *         description: Monthly attendance summary
+   */
+  router.get(
+    '/attendances/summary',
+    authenticate,
+    requirePermission('hr:attendances:read'),
+    validate(AttendanceSummarySchema),
+    attendanceController.getSummary,
+  );
+
+  /**
+   * @swagger
+   * /v1/hr/attendances:
+   *   get:
+   *     tags: [HR]
+   *     summary: List attendance records
+   *     security: [{ bearerAuth: [] }]
+   *     parameters:
+   *       - in: query
+   *         name: page
+   *         schema: { type: integer, default: 1 }
+   *       - in: query
+   *         name: limit
+   *         schema: { type: integer, default: 20 }
+   *       - in: query
+   *         name: employeeId
+   *         schema: { type: string, format: uuid }
+   *       - in: query
+   *         name: status
+   *         schema: { type: string, enum: [CLOCKED_IN, CLOCKED_OUT, ABSENT] }
+   *       - in: query
+   *         name: dateFrom
+   *         schema: { type: string, format: date }
+   *       - in: query
+   *         name: dateTo
+   *         schema: { type: string, format: date }
+   *     responses:
+   *       200:
+   *         description: Paginated list of attendance records
+   */
+  router.get(
+    '/attendances',
+    authenticate,
+    requirePermission('hr:attendances:read'),
+    validate(ListAttendancesSchema),
+    attendanceController.list,
+  );
+
+  /**
+   * @swagger
+   * /v1/hr/attendances/{id}:
+   *   get:
+   *     tags: [HR]
+   *     summary: Get attendance by ID
+   *     security: [{ bearerAuth: [] }]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string, format: uuid }
+   *     responses:
+   *       200:
+   *         description: Attendance record details
+   *       404:
+   *         description: Attendance not found
+   */
+  router.get(
+    '/attendances/:id',
+    authenticate,
+    requirePermission('hr:attendances:read'),
+    attendanceController.getById,
   );
 
   return router;

@@ -11,6 +11,7 @@ import { ILeaveTypeRepository } from './domain/repositories/ILeaveTypeRepository
 import { ILeaveBalanceRepository } from './domain/repositories/ILeaveBalanceRepository';
 import { ILeaveRepository } from './domain/repositories/ILeaveRepository';
 import { IDepartmentRepository } from './domain/repositories/IDepartmentRepository';
+import { IAttendanceRepository } from './domain/repositories/IAttendanceRepository';
 import { IEmployeeNumberGenerator } from './application/ports/IEmployeeNumberGenerator';
 import { IUserAccountCreator } from './application/ports/IUserAccountCreator';
 import { KyselyEmployeeRepository } from './infrastructure/repositories/KyselyEmployeeRepository';
@@ -18,6 +19,7 @@ import { KyselyLeaveTypeRepository } from './infrastructure/repositories/KyselyL
 import { KyselyLeaveBalanceRepository } from './infrastructure/repositories/KyselyLeaveBalanceRepository';
 import { KyselyLeaveRepository } from './infrastructure/repositories/KyselyLeaveRepository';
 import { KyselyDepartmentRepository } from './infrastructure/repositories/KyselyDepartmentRepository';
+import { KyselyAttendanceRepository } from './infrastructure/repositories/KyselyAttendanceRepository';
 import { SequentialEmployeeNumberGenerator } from './infrastructure/services/SequentialEmployeeNumberGenerator';
 import { CreateEmployeeUseCase } from './application/use-cases/employee/CreateEmployeeUseCase';
 import { GetEmployeeUseCase } from './application/use-cases/employee/GetEmployeeUseCase';
@@ -33,15 +35,23 @@ import { GetLeaveUseCase } from './application/use-cases/leave/GetLeaveUseCase';
 import { GetEmployeeLeaveBalancesUseCase } from './application/use-cases/leave-balance/GetEmployeeLeaveBalancesUseCase';
 import { CreateLeaveTypeUseCase } from './application/use-cases/leave-type/CreateLeaveTypeUseCase';
 import { ListLeaveTypesUseCase } from './application/use-cases/leave-type/ListLeaveTypesUseCase';
+import { UpdateLeaveTypeUseCase } from './application/use-cases/leave-type/UpdateLeaveTypeUseCase';
+import { ChangeLeaveTypeStatusUseCase } from './application/use-cases/leave-type/ChangeLeaveTypeStatusUseCase';
 import { CreateDepartmentUseCase } from './application/use-cases/department/CreateDepartmentUseCase';
 import { GetDepartmentUseCase } from './application/use-cases/department/GetDepartmentUseCase';
 import { ListDepartmentsUseCase } from './application/use-cases/department/ListDepartmentsUseCase';
 import { UpdateDepartmentUseCase } from './application/use-cases/department/UpdateDepartmentUseCase';
 import { ChangeDepartmentStatusUseCase } from './application/use-cases/department/ChangeDepartmentStatusUseCase';
+import { ClockInUseCase } from './application/use-cases/attendance/ClockInUseCase';
+import { ClockOutUseCase } from './application/use-cases/attendance/ClockOutUseCase';
+import { GetAttendanceUseCase } from './application/use-cases/attendance/GetAttendanceUseCase';
+import { ListAttendancesUseCase } from './application/use-cases/attendance/ListAttendancesUseCase';
+import { GetAttendanceSummaryUseCase } from './application/use-cases/attendance/GetAttendanceSummaryUseCase';
 import { EmployeeController } from './infrastructure/http/EmployeeController';
 import { LeaveController } from './infrastructure/http/LeaveController';
 import { LeaveTypeController } from './infrastructure/http/LeaveTypeController';
 import { DepartmentController } from './infrastructure/http/DepartmentController';
+import { AttendanceController } from './infrastructure/http/AttendanceController';
 import { createHrRoutes } from './infrastructure/http/HrRoutes';
 
 export interface HRModuleConfig {
@@ -68,6 +78,7 @@ export class HRModule implements IModule {
     container.registerInstance(TOKENS.LeaveBalanceRepository, new KyselyLeaveBalanceRepository(this.config.db));
     container.registerInstance(TOKENS.LeaveRepository, new KyselyLeaveRepository(this.config.db));
     container.registerInstance(TOKENS.DepartmentRepository, new KyselyDepartmentRepository(this.config.db));
+    container.registerInstance(TOKENS.AttendanceRepository, new KyselyAttendanceRepository(this.config.db));
     container.registerInstance(TOKENS.EmployeeNumberGenerator, new SequentialEmployeeNumberGenerator(this.config.db));
     container.registerInstance(TOKENS.EventBus, this.config.eventBus);
 
@@ -102,6 +113,8 @@ export class HRModule implements IModule {
 
     const createLeaveTypeUseCase = new CreateLeaveTypeUseCase(leaveTypeRepo);
     const listLeaveTypesUseCase = new ListLeaveTypesUseCase(leaveTypeRepo);
+    const updateLeaveTypeUseCase = new UpdateLeaveTypeUseCase(leaveTypeRepo);
+    const changeLeaveTypeStatusUseCase = new ChangeLeaveTypeStatusUseCase(leaveTypeRepo);
 
     const departmentRepo = container.resolve<IDepartmentRepository>(TOKENS.DepartmentRepository);
     const createDepartmentUseCase = new CreateDepartmentUseCase(departmentRepo, eventBus);
@@ -110,10 +123,18 @@ export class HRModule implements IModule {
     const updateDepartmentUseCase = new UpdateDepartmentUseCase(departmentRepo);
     const changeDepartmentStatusUseCase = new ChangeDepartmentStatusUseCase(departmentRepo);
 
+    const attendanceRepo = container.resolve<IAttendanceRepository>(TOKENS.AttendanceRepository);
+    const clockInUseCase = new ClockInUseCase(attendanceRepo, employeeRepo, eventBus);
+    const clockOutUseCase = new ClockOutUseCase(attendanceRepo, eventBus);
+    const getAttendanceUseCase = new GetAttendanceUseCase(attendanceRepo);
+    const listAttendancesUseCase = new ListAttendancesUseCase(attendanceRepo);
+    const getAttendanceSummaryUseCase = new GetAttendanceSummaryUseCase(attendanceRepo);
+
     const employeeController = new EmployeeController(createEmployeeUseCase, getEmployeeUseCase, listEmployeesUseCase, updateEmployeeUseCase, changeEmployeeStatusUseCase);
     const leaveController = new LeaveController(applyLeaveUseCase, approveLeaveUseCase, rejectLeaveUseCase, cancelLeaveUseCase, listLeavesUseCase, getLeaveUseCase, getEmployeeLeaveBalancesUseCase);
-    const leaveTypeController = new LeaveTypeController(createLeaveTypeUseCase, listLeaveTypesUseCase);
+    const leaveTypeController = new LeaveTypeController(createLeaveTypeUseCase, listLeaveTypesUseCase, updateLeaveTypeUseCase, changeLeaveTypeStatusUseCase);
     const departmentController = new DepartmentController(createDepartmentUseCase, getDepartmentUseCase, listDepartmentsUseCase, updateDepartmentUseCase, changeDepartmentStatusUseCase);
+    const attendanceController = new AttendanceController(clockInUseCase, clockOutUseCase, getAttendanceUseCase, listAttendancesUseCase, getAttendanceSummaryUseCase);
 
     const authenticate = createAuthMiddleware(tokenService);
 
@@ -122,6 +143,7 @@ export class HRModule implements IModule {
       leaveController,
       leaveTypeController,
       departmentController,
+      attendanceController,
       authenticate,
       requirePermission,
     );

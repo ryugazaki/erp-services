@@ -7,4 +7,5 @@ export const TOKENS = {
   EmployeeNumberGenerator: Symbol('IEmployeeNumberGenerator'),
   UserAccountCreator: Symbol('IUserAccountCreator'),
   EventBus: Symbol('IEventBus'),
+  AttendanceRepository: Symbol('IAttendanceRepository'),
 } as const;

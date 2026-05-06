@@ -5,6 +5,8 @@ export interface HrDatabase {
   'hr.leave_types': LeaveTypesTable;
   'hr.leave_balances': LeaveBalancesTable;
   'hr.leaves': LeavesTable;
+  'hr.departments': DepartmentsTable;
+  'hr.attendances': AttendancesTable;
 }
 
 export interface EmployeesTable {
@@ -61,6 +63,28 @@ export interface LeavesTable {
   approved_at: ColumnType<Date | null, Date | null, Date | null>;
   remarks: ColumnType<string | null, string | null, string | null>;
   cancelled_at: ColumnType<Date | null, Date | null, Date | null>;
+  created_at: ColumnType<Date, Date, Date>;
+  updated_at: ColumnType<Date, Date, Date>;
+}
+
+export interface DepartmentsTable {
+  id: ColumnType<string, string, string>;
+  name: ColumnType<string, string, string>;
+  code: ColumnType<string, string, string>;
+  description: ColumnType<string | null, string | null, string | null>;
+  head_id: ColumnType<string | null, string | null, string | null>;
+  is_active: ColumnType<boolean, boolean, boolean>;
+  created_at: ColumnType<Date, Date, Date>;
+  updated_at: ColumnType<Date, Date, Date>;
+}
+
+export interface AttendancesTable {
+  id: ColumnType<string, string, string>;
+  employee_id: ColumnType<string, string, string>;
+  date: ColumnType<Date, Date, Date>;
+  clocked_in_at: ColumnType<Date, Date, Date>;
+  clocked_out_at: ColumnType<Date | null, Date | null, Date | null>;
+  status: ColumnType<string, string, string>;
   created_at: ColumnType<Date, Date, Date>;
   updated_at: ColumnType<Date, Date, Date>;
 }

@@ -100,4 +100,18 @@ export class LeaveType extends AggregateRoot {
 
     return Result.ok(undefined);
   }
+
+  activate(): Result<void> {
+    if (this.state.isActive) return Result.fail('LEAVE_TYPE_ALREADY_ACTIVE');
+    this.state.isActive = true;
+    this.state.updatedAt = new Date();
+    return Result.ok(undefined);
+  }
+
+  deactivate(): Result<void> {
+    if (!this.state.isActive) return Result.fail('LEAVE_TYPE_ALREADY_INACTIVE');
+    this.state.isActive = false;
+    this.state.updatedAt = new Date();
+    return Result.ok(undefined);
+  }
 }

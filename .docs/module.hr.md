@@ -24,7 +24,7 @@
 
 ## 1. Module Overview
 
-The HR module manages employees, departments, leave types, leave balances, and leave applications.
+The HR module manages employees, departments, leave types, leave balances, leave applications, and attendance tracking.
 
 **Key behaviors:**
 - Creating an employee auto-creates a user account (auth module) with a generated password
@@ -32,6 +32,7 @@ The HR module manages employees, departments, leave types, leave balances, and l
 - Employee status can be changed via `PUT /employees/:id/status` (ACTIVE, INACTIVE, SUSPENDED, TERMINATED)
 - Department activate/deactivate via `PUT /departments/:id/activate` and `PUT /departments/:id/deactivate`
 - Leave balances visible via `GET /employees/:employeeId/leave-balances`
+- Attendance tracking: one clock-in/out session per employee per day, monthly summary
 
 **Dependencies:**
 
@@ -88,6 +89,19 @@ All routes are prefixed with `/v1/hr`. Every endpoint requires authentication vi
 |---|---|---|---|---|
 | POST | `/leave-types` | `hr:leave-types:write` | CreateLeaveTypeSchema | Create leave type |
 | GET | `/leave-types` | `hr:leave-types:read` | — | List all (no pagination) |
+| PUT | `/leave-types/:id` | `hr:leave-types:write` | UpdateLeaveTypeSchema | Update leave type details |
+| PUT | `/leave-types/:id/activate` | `hr:leave-types:write` | — | Activate leave type |
+| PUT | `/leave-types/:id/deactivate` | `hr:leave-types:write` | — | Deactivate leave type |
+
+### Attendance Routes
+
+| Method | Path | Permission | Validation | Summary |
+|---|---|---|---|---|
+| POST | `/attendances/clock-in` | `hr:attendances:write` | ClockInSchema | Clock in for today |
+| POST | `/attendances/clock-out` | `hr:attendances:write` | ClockOutSchema | Clock out for today |
+| GET | `/attendances/summary` | `hr:attendances:read` | AttendanceSummarySchema | Monthly summary (employeeId, month, year) |
+| GET | `/attendances` | `hr:attendances:read` | ListAttendancesSchema | Paginated list (employee, status, date filters) |
+| GET | `/attendances/:id` | `hr:attendances:read` | — | Get by ID |
 
 ---
 
@@ -202,7 +216,7 @@ interface LeaveState {
 
 **State:** id, name, code, description, defaultDays, isPaid, isActive, createdAt, updatedAt
 
-**Methods:** `create()`, `reconstitute()`, `update()`
+**Methods:** `create()`, `reconstitute()`, `update()`, `activate()`, `deactivate()`
 
 ---
 
@@ -222,6 +236,34 @@ interface LeaveState {
 
 ---
 
+#### Attendance
+
+**File:** `domain/entities/Attendance.ts`
+
+**State:**
+```typescript
+interface AttendanceState {
+  id: string;
+  employeeId: string;
+  date: Date;
+  clockedInAt: Date;
+  clockedOutAt: Date | null;
+  status: string;           // CLOCKED_IN | CLOCKED_OUT | ABSENT
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+**Methods:**
+
+| Method | Input | Returns | Notes |
+|---|---|---|---|
+| `create()` | `{ employeeId, date, clockedInAt }` | `Result<Attendance>` | Records `hr.attendance.clocked-in` |
+| `reconstitute()` | `AttendanceState` | `Attendance` | No events |
+| `clockOut()` | — | `Result<void>` | Errors if already CLOCKED_OUT, records `hr.attendance.clocked-out` |
+
+---
+
 ### 3.2 Value Objects
 
 | Value Object | File | Rules |
@@ -231,6 +273,7 @@ interface LeaveState {
 | `EmployeeStatus` | `domain/value-objects/EmployeeStatus.ts` | ACTIVE, INACTIVE, SUSPENDED, TERMINATED |
 | `LeaveStatus` | `domain/value-objects/LeaveStatus.ts` | PENDING, APPROVED, REJECTED, CANCELLED |
 | `DateRange` | `domain/value-objects/DateRange.ts` | start < end, calculates totalDays |
+| `AttendanceStatus` | `domain/value-objects/AttendanceStatus.ts` | CLOCKED_IN, CLOCKED_OUT, ABSENT |
 
 ---
 
@@ -247,6 +290,8 @@ All events follow naming convention: `hr.<entity>.<action>`
 | `LeaveApproved` | `hr.leave.approved` | leaveId, employeeId, approvedBy |
 | `LeaveRejected` | `hr.leave.rejected` | leaveId, employeeId, rejectedBy |
 | `LeaveCancelled` | `hr.leave.cancelled` | leaveId, employeeId |
+| `AttendanceClockedIn` | `hr.attendance.clocked-in` | employeeId, date |
+| `AttendanceClockedOut` | `hr.attendance.clocked-out` | employeeId, date |
 
 ---
 
@@ -312,9 +357,19 @@ interface ILeaveBalanceRepository {
 }
 ```
 
----
-
-## 4. Application Layer
+#### IAttendanceRepository
+```typescript
+interface IAttendanceRepository {
+  findById(id: string): Promise<Attendance | null>;
+  findActiveByEmployeeForDate(employeeId: string, date: Date): Promise<Attendance | null>;
+  findAll(filter: AttendanceFilter, pagination: PaginationInput): Promise<PaginatedResult<Attendance>>;
+  save(attendance: Attendance): Promise<void>;
+  update(attendance: Attendance): Promise<void>;
+  getMonthlySummary(employeeId: string, month: number, year: number): Promise<AttendanceMonthlySummary>;
+}
+// AttendanceFilter: { employeeId?: string; status?: string; dateFrom?: Date; dateTo?: Date }
+// AttendanceMonthlySummary: { totalDays, presentDays, clockedOutDays, absentDays, averageClockInTime, averageClockOutTime, totalWorkHours }
+```
 
 ### 4.1 DTOs & Validation Schemas
 
@@ -333,6 +388,11 @@ All DTOs use Zod schemas. The `validate()` middleware parses `req.body`, strips 
 | **ReviewLeaveSchema** | `remarks?` (max 500) |
 | **ListLeavesSchema** | `page` (default 1), `limit` (default 20, max 100), `employeeId?` (uuid), `status?` (PENDING/APPROVED/REJECTED/CANCELLED), `startDateFrom?` (date), `startDateTo?` (date) |
 | **CreateLeaveTypeSchema** | `name` (1-50), `code` (1-20), `description?` (max 500), `defaultDays` (int >= 0), `isPaid` (default true) |
+| **UpdateLeaveTypeSchema** | `name?` (1-50), `description?` (max 500), `defaultDays?` (int >= 0), `isPaid?` (boolean) |
+| **ClockInSchema** | `employeeId` (uuid) |
+| **ClockOutSchema** | `employeeId` (uuid) |
+| **ListAttendancesSchema** | `page` (default 1), `limit` (default 20, max 100), `employeeId?` (uuid), `status?` (CLOCKED_IN/CLOCKED_OUT/ABSENT), `dateFrom?` (date), `dateTo?` (date) |
+| **AttendanceSummarySchema** | `employeeId` (uuid), `month` (int 1-12), `year` (int >= 2020) |
 
 ---
 
@@ -381,6 +441,18 @@ All DTOs use Zod schemas. The `validate()` middleware parses `req.body`, strips 
 |---|---|---|---|
 | `CreateLeaveTypeUseCase` | CreateLeaveTypeDTO | LeaveType fields | Checks code uniqueness |
 | `ListLeaveTypesUseCase` | — | LeaveType[] | — |
+| `UpdateLeaveTypeUseCase` | `{ id, ...updates }` | LeaveType fields | — |
+| `ChangeLeaveTypeStatusUseCase` | `{ id, action: 'activate' \| 'deactivate' }` | LeaveType fields | — |
+
+#### Attendance
+
+| Use Case | Input | Output | Side Effects |
+|---|---|---|---|
+| `ClockInUseCase` | `{ employeeId }` | Attendance fields | Validates employee active, checks no existing session today, publishes events |
+| `ClockOutUseCase` | `{ employeeId }` | Attendance fields | Finds active session, publishes events |
+| `GetAttendanceUseCase` | `{ id }` | Attendance fields | — |
+| `ListAttendancesUseCase` | ListAttendancesDTO | `{ items[], meta }` | — |
+| `GetAttendanceSummaryUseCase` | `{ employeeId, month, year }` | AttendanceMonthlySummary | SQL aggregation |
 
 ---
 
@@ -397,6 +469,7 @@ export const TOKENS = {
   EmployeeNumberGenerator: Symbol('IEmployeeNumberGenerator'),
   UserAccountCreator:      Symbol('IUserAccountCreator'),
   EventBus:                Symbol('IEventBus'),
+  AttendanceRepository:    Symbol('IAttendanceRepository'),
 } as const;
 ```
 
@@ -417,12 +490,14 @@ All tables are in the `hr` schema (PostgreSQL).
 | `hr.leave_types` | 001_create_hr_schema | name (UNIQUE), code (UNIQUE), default_days, is_paid, is_active |
 | `hr.leave_balances` | 001_create_hr_schema | employee_id + leave_type_id + year (UNIQUE), total_days, used_days, remaining_days |
 | `hr.leaves` | 001_create_hr_schema | employee_id, leave_type_id, start_date, end_date, total_days, status, approved_by |
+| `hr.attendances` | 003_create_attendances | employee_id, date, clocked_in_at, clocked_out_at, status. UNIQUE(employee_id, date) |
 
 **Indexes:**
 - `idx_employees_user_id`, `idx_employees_status`
 - `idx_departments_code`
 - `idx_leave_balances_employee` (employee_id, year)
 - `idx_leaves_employee`, `idx_leaves_status`, `idx_leaves_date_range`
+- `idx_attendances_employee`, `idx_attendances_date`, `idx_attendances_status`, `idx_attendances_employee_date`
 
 **Seeded data (001):** 5 leave types — ANNUAL, SICK, MATERNITY, PATERNITY, UNPAID
 
@@ -437,7 +512,8 @@ All tables are in the `hr` schema (PostgreSQL).
 | `EmployeeController` | create, getById, list, update, changeStatus |
 | `LeaveController` | apply, getById, list, approve, reject, cancel, getBalances |
 | `DepartmentController` | create, getById, list, update, activate, deactivate |
-| `LeaveTypeController` | create, list |
+| `LeaveTypeController` | create, list, update, activate, deactivate |
+| `AttendanceController` | clockIn, clockOut, getById, list, getSummary |
 | `HrRoutes` | Route definitions with Swagger annotations |
 | `HrErrorMapper` | Error code → HTTP status mapping |
 
@@ -492,6 +568,8 @@ All tables are in the `hr` schema (PostgreSQL).
 | `LEAVE_TYPE_NAME_REQUIRED` | 400 | Leave type name is required |
 | `LEAVE_TYPE_CODE_REQUIRED` | 400 | Leave type code is required |
 | `LEAVE_TYPE_INVALID_DAYS` | 400 | Invalid default days |
+| `LEAVE_TYPE_ALREADY_ACTIVE` | 409 | Leave type is already active |
+| `LEAVE_TYPE_ALREADY_INACTIVE` | 409 | Leave type is already inactive |
 
 **Leave balance errors:**
 
@@ -501,6 +579,15 @@ All tables are in the `hr` schema (PostgreSQL).
 | `LEAVE_BALANCE_INVALID_DAYS` | 400 | Invalid leave balance days |
 
 **General:** `INVALID_DATE_RANGE` → 400
+
+**Attendance errors:**
+
+| Code | HTTP | Message |
+|---|---|---|
+| `ATTENDANCE_NOT_FOUND` | 404 | Attendance record not found |
+| `ATTENDANCE_ALREADY_CLOCKED_IN` | 409 | Employee already clocked in today |
+| `ATTENDANCE_ALREADY_CLOCKED_OUT` | 409 | Employee already clocked out |
+| `ATTENDANCE_NOT_CLOCKED_IN` | 400 | Employee has not clocked in today |
 
 **Fallback:** Any unmapped error code returns 500.
 
@@ -530,27 +617,28 @@ register():
   KyselyLeaveTypeRepository   → TOKENS.LeaveTypeRepository
   KyselyLeaveBalanceRepository → TOKENS.LeaveBalanceRepository
   KyselyLeaveRepository       → TOKENS.LeaveRepository
+  KyselyAttendanceRepository  → TOKENS.AttendanceRepository
   SequentialEmployeeNumberGenerator → TOKENS.EmployeeNumberGenerator
   UserAccountCreator (from auth)    → TOKENS.UserAccountCreator
   eventBus                          → TOKENS.EventBus
 
 bootstrap():
   Resolve all repos + services from container
-  Instantiate 15 use cases
-  Instantiate 4 controllers
-  createHrRoutes(employee, leave, leaveType, department, auth, rbac)
+  Instantiate 20 use cases
+  Instantiate 5 controllers
+  createHrRoutes(employee, leave, leaveType, department, attendance, auth, rbac)
 ```
 
 ---
 
 ## 8. Testing
 
-**28 test suites, ~178 tests** (as of last update)
+**37 test suites, 219 tests** (as of last update)
 
 **Test files location:**
 - `domain/entities/__tests__/` — Entity unit tests (Employee, Leave, Department, LeaveType, LeaveBalance)
-- `domain/value-objects/__tests__/` — Value object tests (EmployeeNumber, PhoneNumber, EmployeeStatus, LeaveStatus, DateRange)
+- `domain/value-objects/__tests__/` — Value object tests (EmployeeNumber, PhoneNumber, EmployeeStatus, LeaveStatus, DateRange, AttendanceStatus)
 - `application/use-cases/*/__tests__/` — Use case tests with mock repos
-- `tests/mocks/` — Mock implementations (MockEmployeeRepository, MockDepartmentRepository, MockLeaveRepository, MockLeaveTypeRepository, MockLeaveBalanceRepository, MockEmployeeNumberGenerator, MockEventBus)
+- `tests/mocks/` — Mock implementations (MockEmployeeRepository, MockDepartmentRepository, MockLeaveRepository, MockLeaveTypeRepository, MockLeaveBalanceRepository, MockAttendanceRepository, MockEmployeeNumberGenerator, MockEventBus)
 
 **Pattern:** All mocks use in-memory Maps. Tests use `Result.isSuccess()/isFailure()` + `getValue()/getError()` (not `.value`/`.error`).
