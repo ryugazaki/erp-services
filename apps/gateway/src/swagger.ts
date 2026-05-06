@@ -60,14 +60,6 @@ const options: swaggerJsdoc.Options = {
             password: { type: 'string', format: 'password', example: 'MyP@ssw0rd!' },
           },
         },
-        RegisterRequest: {
-          type: 'object',
-          required: ['email', 'password'],
-          properties: {
-            email: { type: 'string', format: 'email', example: 'user@example.com' },
-            password: { type: 'string', format: 'password', minLength: 8, example: 'MyP@ssw0rd!' },
-          },
-        },
         LogoutRequest: {
           type: 'object',
           properties: {
@@ -140,6 +132,7 @@ const options: swaggerJsdoc.Options = {
             hireDate: { type: 'string', format: 'date-time' },
             status: { type: 'string', enum: ['ACTIVE', 'INACTIVE', 'RESIGNED'], example: 'ACTIVE' },
             userId: { type: 'string', format: 'uuid' },
+            temporaryPassword: { type: 'string', description: 'Auto-generated login password (only on creation)' },
           },
         },
         ApplyLeaveRequest: {

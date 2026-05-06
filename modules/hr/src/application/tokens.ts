@@ -4,5 +4,6 @@ export const TOKENS = {
   LeaveBalanceRepository: Symbol('ILeaveBalanceRepository'),
   LeaveRepository: Symbol('ILeaveRepository'),
   EmployeeNumberGenerator: Symbol('IEmployeeNumberGenerator'),
+  UserAccountCreator: Symbol('IUserAccountCreator'),
   EventBus: Symbol('IEventBus'),
 } as const;

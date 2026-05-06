@@ -8,7 +8,6 @@ export const CreateEmployeeSchema = z.object({
   departmentId: z.string().uuid().optional(),
   position: z.string().max(100).optional(),
   hireDate: z.coerce.date(),
-  userId: z.string().uuid().optional(),
 });
 
 export type CreateEmployeeDTO = z.infer<typeof CreateEmployeeSchema>;

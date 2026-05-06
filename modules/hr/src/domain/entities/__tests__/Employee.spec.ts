@@ -142,4 +142,17 @@ describe('Employee Entity', () => {
       expect(events[0].eventType).toBe('hr.employee.status-changed');
     });
   });
+
+  describe('linkUser', () => {
+    it('should set userId on the employee', () => {
+      const props = { ...validProps };
+      delete (props as any).userId;
+      const employee = Employee.create(props).getValue();
+      expect(employee.userId).toBeNull();
+
+      employee.linkUser('user-abc-123');
+
+      expect(employee.userId).toBe('user-abc-123');
+    });
+  });
 });

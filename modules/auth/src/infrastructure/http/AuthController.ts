@@ -3,12 +3,8 @@ import { Request, Response } from 'express';
 import { ApiResponse } from '@erp/core/http';
 import { mapAuthError } from './AuthErrorMapper';
 import { LoginUseCase } from '../../application/use-cases/LoginUseCase';
-import { RegisterUseCase } from '../../application/use-cases/RegisterUseCase';
 import { RefreshTokenUseCase } from '../../application/use-cases/RefreshTokenUseCase';
 import { LogoutUseCase } from '../../application/use-cases/LogoutUseCase';
-import { LoginSchema } from '../../application/dtos/LoginDTO';
-import { RegisterSchema } from '../../application/dtos/RegisterDTO';
-import { RefreshTokenSchema } from '../../application/dtos/RefreshTokenDTO';
 
 const REFRESH_COOKIE_OPTIONS = {
   httpOnly: true,
@@ -21,7 +17,6 @@ const REFRESH_COOKIE_OPTIONS = {
 export class AuthController {
   constructor(
     private readonly loginUseCase: LoginUseCase,
-    private readonly registerUseCase: RegisterUseCase,
     private readonly refreshTokenUseCase: RefreshTokenUseCase,
     private readonly logoutUseCase: LogoutUseCase,
   ) {}
@@ -38,17 +33,6 @@ export class AuthController {
     res.cookie('refreshToken', refreshToken, REFRESH_COOKIE_OPTIONS);
 
     return res.status(200).json(ApiResponse.success({ accessToken }, 'Login successful'));
-  };
-
-  register = async (req: Request, res: Response): Promise<Response> => {
-    const result = await this.registerUseCase.execute(req.body);
-
-    if (result.isFailure()) {
-      const { status, message } = mapAuthError(result.getError());
-      return res.status(status).json(ApiResponse.error(result.getError(), message, status));
-    }
-
-    return res.status(201).json(ApiResponse.success(result.getValue(), 'Registration successful', 201));
   };
 
   refresh = async (req: Request, res: Response): Promise<Response> => {

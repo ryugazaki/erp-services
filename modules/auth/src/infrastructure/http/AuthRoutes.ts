@@ -3,7 +3,6 @@ import { AuthController } from './AuthController';
 import { createAuthMiddleware } from './middlewares/authenticate.middleware';
 import { validate } from '@erp/core/http';
 import { LoginSchema } from '../../application/dtos/LoginDTO';
-import { RegisterSchema } from '../../application/dtos/RegisterDTO';
 import { ITokenService } from '../../application/ports/ITokenService';
 
 /**
@@ -64,43 +63,6 @@ export function createAuthRoutes(
    *               $ref: '#/components/schemas/ErrorResponse'
    */
   router.post('/login', validate(LoginSchema), controller.login);
-
-  /**
-   * @swagger
-   * /v1/auth/register:
-   *   post:
-   *     tags: [Auth]
-   *     summary: Register a new user
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             $ref: '#/components/schemas/RegisterRequest'
-   *     responses:
-   *       201:
-   *         description: Registration successful
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $Of:
-   *                 - $ref: '#/components/schemas/SuccessResponse'
-   *                 - type: object
-   *                   properties:
-   *                     data:
-   *                       type: object
-   *                       properties:
-   *                         id: { type: 'string', example: 'uuid' }
-   *                         email: { type: 'string', example: 'user@example.com' }
-   *                         role: { type: 'string', example: 'EMPLOYEE' }
-   *       400:
-   *         description: Validation error or duplicate email
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/ErrorResponse'
-   */
-  router.post('/register', validate(RegisterSchema), controller.register);
 
   /**
    * @swagger

@@ -10,7 +10,6 @@ import { IRefreshTokenRepository } from './domain/repositories/IRefreshTokenRepo
 import { ITokenService } from './application/ports/ITokenService';
 import { IPermissionResolver } from './application/ports/IPermissionResolver';
 import { LoginUseCase } from './application/use-cases/LoginUseCase';
-import { RegisterUseCase } from './application/use-cases/RegisterUseCase';
 import { RefreshTokenUseCase } from './application/use-cases/RefreshTokenUseCase';
 import { LogoutUseCase } from './application/use-cases/LogoutUseCase';
 import { DeactivateUserUseCase } from './application/use-cases/DeactivateUserUseCase';
@@ -62,11 +61,10 @@ export class AuthModule implements IModule {
     const eventBus = container.resolve<IEventBus>(TOKENS.EventBus);
 
     const loginUseCase = new LoginUseCase(userRepo, tokenRepo, tokenService, permResolver, eventBus);
-    const registerUseCase = new RegisterUseCase(userRepo, eventBus);
     const refreshUseCase = new RefreshTokenUseCase(tokenRepo, userRepo, tokenService, permResolver, eventBus);
     const logoutUseCase = new LogoutUseCase(tokenRepo, tokenService);
 
-    const controller = new AuthController(loginUseCase, registerUseCase, refreshUseCase, logoutUseCase);
+    const controller = new AuthController(loginUseCase, refreshUseCase, logoutUseCase);
     this.router = createAuthRoutes(controller, tokenService);
   }
 

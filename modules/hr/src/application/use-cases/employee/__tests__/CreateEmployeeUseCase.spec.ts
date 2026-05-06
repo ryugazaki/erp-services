@@ -3,6 +3,10 @@ import { MockEmployeeRepository } from '../../../../tests/mocks/MockEmployeeRepo
 import { MockEmployeeNumberGenerator } from '../../../../tests/mocks/MockEmployeeNumberGenerator';
 import { MockEventBus } from '../../../../tests/mocks/MockEventBus';
 
+const mockUserAccountCreator = {
+  createAccount: jest.fn().mockResolvedValue({ userId: 'user-123', temporaryPassword: 'TempPass1!xyz' }),
+};
+
 describe('CreateEmployeeUseCase', () => {
   let useCase: CreateEmployeeUseCase;
   let employeeRepo: MockEmployeeRepository;
@@ -10,13 +14,15 @@ describe('CreateEmployeeUseCase', () => {
   let eventBus: MockEventBus;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     employeeRepo = new MockEmployeeRepository();
     numberGenerator = new MockEmployeeNumberGenerator();
     eventBus = new MockEventBus();
-    useCase = new CreateEmployeeUseCase(employeeRepo, numberGenerator, eventBus);
+    mockUserAccountCreator.createAccount.mockResolvedValue({ userId: 'user-123', temporaryPassword: 'TempPass1!xyz' });
+    useCase = new CreateEmployeeUseCase(employeeRepo, numberGenerator, mockUserAccountCreator as any, eventBus);
   });
 
-  it('should create employee successfully with valid data and status ACTIVE', async () => {
+  it('should create employee with auto-generated user account', async () => {
     const dto = {
       firstName: 'John',
       lastName: 'Doe',
@@ -30,11 +36,12 @@ describe('CreateEmployeeUseCase', () => {
     expect(result.isSuccess()).toBe(true);
     const value = result.getValue();
     expect(value.firstName).toBe('John');
-    expect(value.lastName).toBe('Doe');
-    expect(value.email).toBe('john@example.com');
     expect(value.status).toBe('ACTIVE');
     expect(value.employeeNumber).toBe('EMP-00001');
-    expect(value.id).toBeDefined();
+    expect(value.userId).toBe('user-123');
+    expect(value.temporaryPassword).toBe('TempPass1!xyz');
+
+    expect(mockUserAccountCreator.createAccount).toHaveBeenCalledWith('john@example.com', 'EMPLOYEE');
   });
 
   it('should fail if email already exists', async () => {

@@ -4,13 +4,14 @@ import { Kysely } from 'kysely';
 import { container, injectable } from 'tsyringe';
 import { IModule, EventHandlerMap } from '@erp/core/module-registry';
 import { IEventBus } from '@erp/core/event-bus';
-import { AUTH_TOKENS, createAuthMiddleware, requirePermission, ITokenService } from '@erp/module/auth';
+import { AUTH_TOKENS, createAuthMiddleware, requirePermission, ITokenService, UserAccountCreator } from '@erp/module/auth';
 import { TOKENS } from './application/tokens';
 import { IEmployeeRepository } from './domain/repositories/IEmployeeRepository';
 import { ILeaveTypeRepository } from './domain/repositories/ILeaveTypeRepository';
 import { ILeaveBalanceRepository } from './domain/repositories/ILeaveBalanceRepository';
 import { ILeaveRepository } from './domain/repositories/ILeaveRepository';
 import { IEmployeeNumberGenerator } from './application/ports/IEmployeeNumberGenerator';
+import { IUserAccountCreator } from './application/ports/IUserAccountCreator';
 import { KyselyEmployeeRepository } from './infrastructure/repositories/KyselyEmployeeRepository';
 import { KyselyLeaveTypeRepository } from './infrastructure/repositories/KyselyLeaveTypeRepository';
 import { KyselyLeaveBalanceRepository } from './infrastructure/repositories/KyselyLeaveBalanceRepository';
@@ -57,6 +58,9 @@ export class HRModule implements IModule {
     container.registerInstance(TOKENS.LeaveRepository, new KyselyLeaveRepository(this.config.db));
     container.registerInstance(TOKENS.EmployeeNumberGenerator, new SequentialEmployeeNumberGenerator(this.config.db));
     container.registerInstance(TOKENS.EventBus, this.config.eventBus);
+
+    const userRepo = container.resolve<any>(AUTH_TOKENS.UserRepository);
+    container.registerInstance(TOKENS.UserAccountCreator, new UserAccountCreator(userRepo));
   }
 
   async bootstrap(): Promise<void> {
@@ -65,11 +69,12 @@ export class HRModule implements IModule {
     const leaveBalanceRepo = container.resolve<ILeaveBalanceRepository>(TOKENS.LeaveBalanceRepository);
     const leaveRepo = container.resolve<ILeaveRepository>(TOKENS.LeaveRepository);
     const empNumGenerator = container.resolve<IEmployeeNumberGenerator>(TOKENS.EmployeeNumberGenerator);
+    const userAccountCreator = container.resolve<IUserAccountCreator>(TOKENS.UserAccountCreator);
     const eventBus = container.resolve<IEventBus>(TOKENS.EventBus);
 
     const tokenService = container.resolve<ITokenService>(AUTH_TOKENS.TokenService);
 
-    const createEmployeeUseCase = new CreateEmployeeUseCase(employeeRepo, empNumGenerator, eventBus);
+    const createEmployeeUseCase = new CreateEmployeeUseCase(employeeRepo, empNumGenerator, userAccountCreator, eventBus);
     const getEmployeeUseCase = new GetEmployeeUseCase(employeeRepo);
     const listEmployeesUseCase = new ListEmployeesUseCase(employeeRepo);
     const updateEmployeeUseCase = new UpdateEmployeeUseCase(employeeRepo, eventBus);

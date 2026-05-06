@@ -10,3 +10,5 @@ export { TOKENS as AUTH_TOKENS } from './application/tokens';
 export { createAuthMiddleware } from './infrastructure/http/middlewares/authenticate.middleware';
 export { requirePermission } from './infrastructure/http/middlewares/rbac.middleware';
 export type { ITokenService } from './application/ports/ITokenService';
+export { UserAccountCreator } from './infrastructure/services/UserAccountCreator';
+export type { IUserAccountCreator } from './infrastructure/services/UserAccountCreator';

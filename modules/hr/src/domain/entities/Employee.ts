@@ -133,4 +133,9 @@ export class Employee extends AggregateRoot {
 
     return Result.ok(undefined);
   }
+
+  linkUser(userId: string): void {
+    this.state.userId = userId;
+    this.state.updatedAt = new Date();
+  }
 }

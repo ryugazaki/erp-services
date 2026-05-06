@@ -3,6 +3,7 @@ import { IUseCase, Result } from '@erp/shared/kernel';
 import { IEventBus } from '@erp/core/event-bus';
 import { IEmployeeRepository } from '../../../domain/repositories/IEmployeeRepository';
 import { IEmployeeNumberGenerator } from '../../ports/IEmployeeNumberGenerator';
+import { IUserAccountCreator } from '../../ports/IUserAccountCreator';
 import { Employee } from '../../../domain/entities/Employee';
 import { CreateEmployeeDTO } from '../../dtos/employee/CreateEmployeeDTO';
 import { TOKENS } from '../../tokens';
@@ -18,7 +19,8 @@ export interface CreateEmployeeResult {
   departmentId: string | null;
   hireDate: Date;
   status: string;
-  userId: string | null;
+  userId: string;
+  temporaryPassword: string;
 }
 
 @injectable()
@@ -26,6 +28,7 @@ export class CreateEmployeeUseCase implements IUseCase<CreateEmployeeDTO, Result
   constructor(
     @inject(TOKENS.EmployeeRepository) private readonly employeeRepo: IEmployeeRepository,
     @inject(TOKENS.EmployeeNumberGenerator) private readonly employeeNumberGenerator: IEmployeeNumberGenerator,
+    @inject(TOKENS.UserAccountCreator) private readonly userAccountCreator: IUserAccountCreator,
     @inject(TOKENS.EventBus) private readonly eventBus: IEventBus,
   ) {}
 
@@ -44,12 +47,15 @@ export class CreateEmployeeUseCase implements IUseCase<CreateEmployeeDTO, Result
       departmentId: dto.departmentId,
       position: dto.position,
       hireDate: dto.hireDate,
-      userId: dto.userId,
     });
 
     if (employeeResult.isFailure()) return Result.fail(employeeResult.getError());
 
     const employee = employeeResult.getValue();
+
+    const { userId, temporaryPassword } = await this.userAccountCreator.createAccount(dto.email, 'EMPLOYEE');
+
+    employee.linkUser(userId);
 
     await this.employeeRepo.save(employee);
 
@@ -69,7 +75,8 @@ export class CreateEmployeeUseCase implements IUseCase<CreateEmployeeDTO, Result
       departmentId: employee.departmentId,
       hireDate: employee.hireDate,
       status: employee.status,
-      userId: employee.userId,
+      userId: employee.userId!,
+      temporaryPassword,
     });
   }
 }
