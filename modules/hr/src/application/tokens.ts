@@ -1,5 +1,6 @@
 export const TOKENS = {
   EmployeeRepository: Symbol('IEmployeeRepository'),
+  DepartmentRepository: Symbol('IDepartmentRepository'),
   LeaveTypeRepository: Symbol('ILeaveTypeRepository'),
   LeaveBalanceRepository: Symbol('ILeaveBalanceRepository'),
   LeaveRepository: Symbol('ILeaveRepository'),

@@ -192,6 +192,37 @@ const options: swaggerJsdoc.Options = {
             isActive: { type: 'boolean', example: true },
           },
         },
+        CreateDepartmentRequest: {
+          type: 'object',
+          required: ['name', 'code'],
+          properties: {
+            name: { type: 'string', example: 'Engineering' },
+            code: { type: 'string', example: 'ENG' },
+            description: { type: 'string', example: 'Engineering department' },
+            headId: { type: 'string', format: 'uuid', description: 'Employee ID of department head' },
+          },
+        },
+        UpdateDepartmentRequest: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            description: { type: 'string' },
+            headId: { type: 'string', format: 'uuid', nullable: true },
+          },
+        },
+        Department: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            name: { type: 'string', example: 'Engineering' },
+            code: { type: 'string', example: 'ENG' },
+            description: { type: 'string' },
+            headId: { type: 'string', format: 'uuid' },
+            isActive: { type: 'boolean', example: true },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time' },
+          },
+        },
       },
     },
   },

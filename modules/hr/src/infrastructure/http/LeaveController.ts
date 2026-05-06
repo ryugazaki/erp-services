@@ -7,6 +7,7 @@ import { ApproveLeaveUseCase } from '../../application/use-cases/leave/ApproveLe
 import { RejectLeaveUseCase } from '../../application/use-cases/leave/RejectLeaveUseCase';
 import { CancelLeaveUseCase } from '../../application/use-cases/leave/CancelLeaveUseCase';
 import { ListLeavesUseCase } from '../../application/use-cases/leave/ListLeavesUseCase';
+import { GetLeaveUseCase } from '../../application/use-cases/leave/GetLeaveUseCase';
 
 @injectable()
 export class LeaveController {
@@ -16,6 +17,7 @@ export class LeaveController {
     private readonly rejectLeaveUseCase: RejectLeaveUseCase,
     private readonly cancelLeaveUseCase: CancelLeaveUseCase,
     private readonly listLeavesUseCase: ListLeavesUseCase,
+    private readonly getLeaveUseCase: GetLeaveUseCase,
   ) {}
 
   apply = async (req: Request, res: Response): Promise<Response> => {
@@ -75,6 +77,17 @@ export class LeaveController {
     }
 
     return res.status(200).json(ApiResponse.success(result.getValue(), 'Leave cancelled successfully'));
+  };
+
+  getById = async (req: Request, res: Response): Promise<Response> => {
+    const result = await this.getLeaveUseCase.execute({ id: req.params.id as string });
+
+    if (result.isFailure()) {
+      const { status, message } = mapHrError(result.getError());
+      return res.status(status).json(ApiResponse.error(result.getError(), message, status));
+    }
+
+    return res.status(200).json(ApiResponse.success(result.getValue(), 'Leave retrieved successfully'));
   };
 
   list = async (req: Request, res: Response): Promise<Response> => {
