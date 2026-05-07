@@ -6,6 +6,7 @@ import { ModuleRegistry } from '@erp/core/module-registry';
 import { AuthModule } from '@erp/module/auth';
 import { HRModule } from '@erp/module/hr';
 import { InventoryModule } from '@erp/module/inventory';
+import { FinanceModule } from '@erp/module/finance';
 import { Logger } from '@erp/shared/utils';
 import { errorMiddleware } from './app';
 import { healthRouter } from './routes/health';
@@ -55,6 +56,15 @@ export async function bootstrap(app: Express) {
   await inventoryModule.register(null);
   await registry.register(inventoryModule);
 
+  // Register Finance module
+  const financeModule = new FinanceModule({
+    db: dbConnection.getDb(),
+    eventBus,
+  });
+
+  await financeModule.register(null);
+  await registry.register(financeModule);
+
   // Mount health route
   app.use('/health', healthRouter);
 
@@ -79,6 +89,8 @@ export async function bootstrap(app: Express) {
     eventBus,
     registry,
     async close() {
+      await registry.unregister('finance');
+      await registry.unregister('inventory');
       await registry.unregister('hr');
       await registry.unregister('auth');
       await eventBus.close();

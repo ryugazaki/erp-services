@@ -51,6 +51,9 @@
       ],
       "@erp/module/inventory": [
         "modules/inventory/src/index.ts"
+      ],
+      "@erp/module/finance": [
+        "modules/finance/src/index.ts"
       ]
     }
   }

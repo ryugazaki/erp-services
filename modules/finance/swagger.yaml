@@ -1,0 +1,1960 @@
+openapi: 3.0.3
+info:
+  title: ERP Finance Module API
+  description: |
+    Finance module for managing Chart of Accounts, journal entries, invoices (AR/AP), and financial reports.
+
+    ## Features
+    - Double-entry bookkeeping enforcement
+    - Automatic account code validation and hierarchy
+    - Invoice status tracking and payment management
+    - Financial report generation (Balance Sheet, Income Statement, Cash Flow)
+    - Tax calculations support
+
+    ## Account Types
+    - **ASSET**: Economic resources owned by the entity
+    - **LIABILITY**: Obligations of the entity
+    - **EQUITY**: Owner's residual interest in assets
+    - **REVENUE**: Inflows from business operations
+    - **EXPENSE**: Outflows from business operations
+
+    ## Invoice Types
+    - **RECEIVABLE**: Accounts Receivable (AR) - money owed by customers
+    - **PAYABLE**: Accounts Payable (AP) - money owed to suppliers
+  version: 1.0.0
+  contact:
+    name: ERP Development Team
+    email: dev@erp-company.com
+
+servers:
+  - url: http://localhost:3000/v1/finance
+    description: Local development server
+  - url: https://api.erp-company.com/v1/finance
+    description: Production server
+
+tags:
+  - name: Accounts
+    description: Chart of Accounts management
+  - name: Journal Entries
+    description: Double-entry bookkeeping journal entries
+  - name: Invoices
+    description: Accounts Receivable and Payable invoices
+  - name: Reports
+    description: Financial reports (Balance Sheet, P&L, Cash Flow)
+
+security:
+  - bearerAuth: []
+
+paths:
+  /accounts:
+    post:
+      tags: [Accounts]
+      summary: Create account
+      description: Create a new account in the Chart of Accounts
+      operationId: createAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountRequest'
+            examples:
+              assetAccount:
+                summary: Asset account
+                value:
+                  code: '1-1001'
+                  name: 'Cash'
+                  description: 'Primary cash account'
+                  type: 'ASSET'
+              revenueAccount:
+                summary: Revenue account
+                value:
+                  code: '4-4001'
+                  name: 'Sales Revenue'
+                  description: 'Revenue from product sales'
+                  type: 'REVENUE'
+      responses:
+        '201':
+          description: Account created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Account'
+              examples:
+                assetAccount:
+                  summary: Created asset account
+                  value:
+                    success: true
+                    statusCode: 201
+                    message: 'Account created successfully'
+                    data:
+                      id: 'acc_1234567890'
+                      code: '1-1001'
+                      name: 'Cash'
+                      description: 'Primary cash account'
+                      type: 'ASSET'
+                      parentId: null
+                      isActive: true
+                      isSystemAccount: false
+                      createdAt: '2024-01-15T08:30:00.000Z'
+                      updatedAt: '2024-01-15T08:30:00.000Z'
+                    timestamp: '2024-01-15T08:30:00.000Z'
+                    requestId: 'req_01JABCDE'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/Conflict'
+    get:
+      tags: [Accounts]
+      summary: List accounts
+      description: Retrieve paginated list of accounts with optional filters
+      operationId: listAccounts
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: type
+          in: query
+          description: Filter by account type
+          schema:
+            type: string
+            enum: [ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE]
+        - name: isActive
+          in: query
+          description: Filter by active status
+          schema:
+            type: boolean
+        - name: search
+          in: query
+          description: Search in code and name
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Accounts retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Account'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+
+  /accounts/{id}:
+    get:
+      tags: [Accounts]
+      summary: Get account by ID
+      description: Retrieve detailed information about a specific account
+      operationId: getAccount
+      parameters:
+        - $ref: '#/components/parameters/AccountId'
+      responses:
+        '200':
+          description: Account retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Account'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [Accounts]
+      summary: Update account
+      description: Update account name and/or description
+      operationId: updateAccount
+      parameters:
+        - $ref: '#/components/parameters/AccountId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountRequest'
+      responses:
+        '200':
+          description: Account updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Account'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+    delete:
+      tags: [Accounts]
+      summary: Delete account
+      description: Soft delete account (if no journal entries exist)
+      operationId: deleteAccount
+      parameters:
+        - $ref: '#/components/parameters/AccountId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessEmpty'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /journal-entries:
+    post:
+      tags: [Journal Entries]
+      summary: Create journal entry
+      description: |
+        Create a new journal entry with double-entry bookkeeping validation.
+        Total debits must equal total credits.
+      operationId: createJournalEntry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateJournalEntryRequest'
+            examples:
+              simpleEntry:
+                summary: Simple debit/credit entry
+                value:
+                  date: '2024-01-15'
+                  description: 'Monthly rent payment for January 2024'
+                  lineItems:
+                    - accountId: 'acc_001'
+                      description: 'Rent expense for January'
+                      debitAmount: 5000
+                      creditAmount: 0
+                    - accountId: 'acc_002'
+                      description: 'Cash payment'
+                      debitAmount: 0
+                      creditAmount: 5000
+      responses:
+        '201':
+          description: Journal entry created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/JournalEntry'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+    get:
+      tags: [Journal Entries]
+      summary: List journal entries
+      description: Retrieve paginated list of journal entries with filters
+      operationId: listJournalEntries
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: status
+          in: query
+          description: Filter by entry status
+          schema:
+            type: string
+            enum: [DRAFT, POSTED, REVERSED]
+        - name: dateFrom
+          in: query
+          description: Filter by entry date (start of range)
+          schema:
+            type: string
+            format: date
+        - name: dateTo
+          in: query
+          description: Filter by entry date (end of range)
+          schema:
+            type: string
+            format: date
+        - name: accountId
+          in: query
+          description: Filter entries that include this account
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Journal entries retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/JournalEntry'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+
+  /journal-entries/{id}:
+    get:
+      tags: [Journal Entries]
+      summary: Get journal entry by ID
+      description: Retrieve journal entry with line items
+      operationId: getJournalEntry
+      parameters:
+        - $ref: '#/components/parameters/JournalEntryId'
+      responses:
+        '200':
+          description: Journal entry retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/JournalEntry'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [Journal Entries]
+      summary: Update journal entry description
+      description: Update only the description (line items are immutable after creation)
+      operationId: updateJournalEntry
+      parameters:
+        - $ref: '#/components/parameters/JournalEntryId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateJournalEntryRequest'
+      responses:
+        '200':
+          description: Journal entry updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/JournalEntry'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /journal-entries/{id}/post:
+    post:
+      tags: [Journal Entries]
+      summary: Post journal entry
+      description: |
+        Post a DRAFT journal entry to the general ledger.
+        Once posted, the entry cannot be modified (only reversed).
+      operationId: postJournalEntry
+      parameters:
+        - $ref: '#/components/parameters/JournalEntryId'
+      responses:
+        '200':
+          description: Journal entry posted successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/JournalEntry'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /journal-entries/{id}/reverse:
+    post:
+      tags: [Journal Entries]
+      summary: Reverse journal entry
+      description: |
+        Create a reversing entry for a POSTED journal entry.
+        This is used to correct errors in posted entries.
+      operationId: reverseJournalEntry
+      parameters:
+        - $ref: '#/components/parameters/JournalEntryId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReverseJournalEntryRequest'
+      responses:
+        '201':
+          description: Journal entry reversed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/JournalEntry'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /invoices:
+    post:
+      tags: [Invoices]
+      summary: Create invoice
+      description: |
+        Create a new invoice (Accounts Receivable or Payable).
+        Line items are automatically calculated with tax.
+      operationId: createInvoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInvoiceRequest'
+            examples:
+              receivableInvoice:
+                summary: Accounts Receivable invoice
+                value:
+                  type: 'RECEIVABLE'
+                  customerId: 'customer_001'
+                  customerName: 'Acme Corporation'
+                  date: '2024-01-15'
+                  dueDate: '2024-02-15'
+                  lineItems:
+                    - description: 'Product A - Premium Widget'
+                      quantity: 5
+                      unitPrice: 100
+                      taxRate: 10
+                    - description: 'Product B - Standard Widget'
+                      quantity: 10
+                      unitPrice: 50
+                      taxRate: 10
+                  notes: 'Payment terms: Net 30'
+              payableInvoice:
+                summary: Accounts Payable invoice
+                value:
+                  type: 'PAYABLE'
+                  customerId: 'vendor_001'
+                  customerName: 'Supplier Inc.'
+                  date: '2024-01-15'
+                  dueDate: '2024-02-15'
+                  lineItems:
+                    - description: 'Raw Materials Supply'
+                      quantity: 100
+                      unitPrice: 25
+                      taxRate: 20
+      responses:
+        '201':
+          description: Invoice created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+    get:
+      tags: [Invoices]
+      summary: List invoices
+      description: Retrieve paginated list of invoices with filters
+      operationId: listInvoices
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: type
+          in: query
+          description: Filter by invoice type
+          schema:
+            type: string
+            enum: [RECEIVABLE, PAYABLE]
+        - name: status
+          in: query
+          description: Filter by invoice status
+          schema:
+            type: string
+            enum: [DRAFT, PENDING, PAID, OVERDUE, CANCELLED]
+        - name: customerId
+          in: query
+          description: Filter by customer/vendor ID
+          schema:
+            type: string
+            format: uuid
+        - name: dateFrom
+          in: query
+          description: Filter by invoice date (start of range)
+          schema:
+            type: string
+            format: date
+        - name: dateTo
+          in: query
+          description: Filter by invoice date (end of range)
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Invoices retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Invoice'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+
+  /invoices/{id}:
+    get:
+      tags: [Invoices]
+      summary: Get invoice by ID
+      description: Retrieve invoice with line items
+      operationId: getInvoice
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+      responses:
+        '200':
+          description: Invoice retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Invoice'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [Invoices]
+      summary: Update invoice
+      description: |
+        Update invoice details (only DRAFT invoices can be updated).
+        Line items can be modified and totals will be recalculated.
+      operationId: updateInvoice
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInvoiceRequest'
+      responses:
+        '200':
+          description: Invoice updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /invoices/{id}/validate:
+    post:
+      tags: [Invoices]
+      summary: Validate invoice
+      description: |
+        Validate a DRAFT invoice and change its status to PENDING.
+        Once validated, the invoice becomes legally binding.
+      operationId: validateInvoice
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+      responses:
+        '200':
+          description: Invoice validated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Invoice'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /invoices/{id}/status:
+    patch:
+      tags: [Invoices]
+      summary: Change invoice status
+      description: |
+        Manually change the invoice status.
+        Valid transitions depend on current status.
+      operationId: changeInvoiceStatus
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeInvoiceStatusRequest'
+      responses:
+        '200':
+          description: Invoice status changed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /invoices/{id}/payments:
+    post:
+      tags: [Invoices]
+      summary: Record payment
+      description: |
+        Record a payment for the invoice.
+        If total paid equals or exceeds the invoice amount, status changes to PAID.
+      operationId: recordPayment
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordPaymentRequest'
+            examples:
+              bankTransfer:
+                summary: Bank transfer payment
+                value:
+                  amount: 275
+                  paymentDate: '2024-01-20'
+                  paymentMethod: 'BANK_TRANSFER'
+                  reference: 'TXN-2024-001'
+                  notes: 'Payment via wire transfer'
+              cashPayment:
+                summary: Cash payment
+                value:
+                  amount: 100
+                  paymentDate: '2024-01-18'
+                  paymentMethod: 'CASH'
+                  notes: 'Partial cash payment'
+      responses:
+        '201':
+          description: Payment recorded successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Payment'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+    get:
+      tags: [Invoices]
+      summary: Get invoice payments
+      description: Retrieve all payments for a specific invoice
+      operationId: getInvoicePayments
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+      responses:
+        '200':
+          description: Payments retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Payment'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /reports/balance-sheet:
+    get:
+      tags: [Reports]
+      summary: Balance Sheet
+      description: |
+        Generate a balance sheet (statement of financial position) as of a specific date.
+
+        **Formula**: Assets = Liabilities + Equity
+      operationId: balanceSheet
+      parameters:
+        - name: asOfDate
+          in: query
+          description: The date as of which to generate the report (defaults to today)
+          schema:
+            type: string
+            format: date
+            default: '2024-01-15'
+      responses:
+        '200':
+          description: Balance sheet generated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/BalanceSheetReport'
+              examples:
+                balanceSheet:
+                  value:
+                    success: true
+                    statusCode: 200
+                    message: 'Balance sheet generated successfully'
+                    data:
+                      asOfDate: '2024-01-15'
+                      assets:
+                        current: 150000
+                        nonCurrent: 500000
+                        total: 650000
+                      liabilities:
+                        current: 75000
+                        nonCurrent: 150000
+                        total: 225000
+                      equity:
+                        ownerCapital: 350000
+                        retainedEarnings: 75000
+                        total: 425000
+                      totalLiabilitiesAndEquity: 650000
+                    timestamp: '2024-01-15T10:00:00.000Z'
+                    requestId: 'req_01JABCDF'
+
+  /reports/income-statement:
+    get:
+      tags: [Reports]
+      summary: Income Statement (Profit & Loss)
+      description: |
+        Generate an income statement for a specific period.
+
+        **Formula**: Net Income = Revenue - Expenses
+      operationId: incomeStatement
+      parameters:
+        - name: startDate
+          in: query
+          description: Start of reporting period
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          description: End of reporting period
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: compareToPeriod
+          in: query
+          description: Compare with previous period
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Income statement generated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/IncomeStatementReport'
+              examples:
+                incomeStatement:
+                  value:
+                    success: true
+                    statusCode: 200
+                    message: 'Income statement generated successfully'
+                    data:
+                      startDate: '2024-01-01'
+                      endDate: '2024-01-31'
+                      revenue:
+                        grossSales: 500000
+                        salesReturns: 10000
+                        netSales: 490000
+                        otherRevenue: 5000
+                        totalRevenue: 495000
+                      expenses:
+                        costOfGoodsSold: 250000
+                        operatingExpenses: 125000
+                        otherExpenses: 10000
+                        totalExpenses: 385000
+                      operatingIncome: 110000
+                      otherIncome: 5000
+                      netIncome: 115000
+                    timestamp: '2024-01-15T10:00:00.000Z'
+                    requestId: 'req_01JABCDE'
+
+  /reports/cash-flow:
+    get:
+      tags: [Reports]
+      summary: Cash Flow Statement
+      description: |
+        Generate a cash flow statement for a specific period.
+
+        Shows how changes in balance sheet accounts and income affect cash and cash equivalents.
+      operationId: cashFlow
+      parameters:
+        - name: startDate
+          in: query
+          description: Start of reporting period
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          description: End of reporting period
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Cash flow statement generated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/CashFlowReport'
+              examples:
+                cashFlow:
+                  value:
+                    success: true
+                    statusCode: 200
+                    message: 'Cash flow statement generated successfully'
+                    data:
+                      startDate: '2024-01-01'
+                      endDate: '2024-01-31'
+                      operatingActivities:
+                        netIncome: 115000
+                        accountsReceivableChange: -25000
+                        accountsPayableChange: 15000
+                        inventoryChange: -10000
+                        netCashFromOperations: 95000
+                      investingActivities:
+                        capitalExpenditures: -50000
+                        equipmentPurchase: -25000
+                        netCashFromInvesting: -75000
+                      financingActivities:
+                        loanProceeds: 50000
+                        loanRepayment: -10000
+                        dividendsPaid: -20000
+                        netCashFromFinancing: 20000
+                      netCashFlow: 40000
+                      cashBeginning: 100000
+                      cashEnding: 140000
+                    timestamp: '2024-01-15T10:00:00.000Z'
+                    requestId: 'req_01JABCDG'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT token obtained from login endpoint.
+        Format: `Authorization: Bearer <token>`
+
+  parameters:
+    AccountId:
+      name: id
+      in: path
+      required: true
+      description: Account ID (UUID)
+      schema:
+        type: string
+        format: uuid
+      example: 'acc_1234567890abcdef'
+
+    JournalEntryId:
+      name: id
+      in: path
+      required: true
+      description: Journal Entry ID (UUID)
+      schema:
+        type: string
+        format: uuid
+      example: 'je_1234567890abcdef'
+
+    InvoiceId:
+      name: id
+      in: path
+      required: true
+      description: Invoice ID (UUID)
+      schema:
+        type: string
+        format: uuid
+      example: 'inv_1234567890abcdef'
+
+    Page:
+      name: page
+      in: query
+      description: Page number for pagination
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+
+    Limit:
+      name: limit
+      in: query
+      description: Number of items per page
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+
+  schemas:
+    SuccessResponse:
+      type: object
+      required:
+        - success
+        - statusCode
+        - message
+        - data
+        - timestamp
+        - requestId
+      properties:
+        success:
+          type: boolean
+          example: true
+        statusCode:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: 'Operation completed successfully'
+        data:
+          type: object
+          description: Response payload (varies by endpoint)
+        timestamp:
+          type: string
+          format: date-time
+          example: '2024-01-15T10:30:00.000Z'
+        requestId:
+          type: string
+          example: 'req_01JABCDE'
+
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - statusCode
+        - error
+        - timestamp
+        - requestId
+      properties:
+        success:
+          type: boolean
+          example: false
+        statusCode:
+          type: integer
+          example: 400
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              example: 'VALIDATION_ERROR'
+            message:
+              type: string
+              example: 'Request validation failed'
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                  message:
+                    type: string
+        timestamp:
+          type: string
+          format: date-time
+        requestId:
+          type: string
+
+    PaginationMeta:
+      type: object
+      required:
+        - pagination
+      properties:
+        pagination:
+          type: object
+          required:
+            - page
+            - limit
+            - totalItems
+            - totalPages
+            - hasNextPage
+            - hasPrevPage
+          properties:
+            page:
+              type: integer
+              example: 1
+            limit:
+              type: integer
+              example: 20
+            totalItems:
+              type: integer
+              example: 47
+            totalPages:
+              type: integer
+              example: 3
+            hasNextPage:
+              type: boolean
+              example: true
+            hasPrevPage:
+              type: boolean
+              example: false
+
+    Account:
+      type: object
+      required:
+        - id
+        - code
+        - name
+        - type
+        - isActive
+        - isSystemAccount
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 'acc_1234567890abcdef'
+        code:
+          type: string
+          description: Hierarchical account code (e.g., "1-1001")
+          example: '1-1001'
+        name:
+          type: string
+          example: 'Cash'
+        description:
+          type: string
+          nullable: true
+          example: 'Primary cash account'
+        type:
+          type: string
+          enum: [ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE]
+          example: 'ASSET'
+        parentId:
+          type: string
+          format: uuid
+          nullable: true
+          description: Parent account ID (for hierarchical accounts)
+          example: 'acc_0987654321fedcba'
+        isActive:
+          type: boolean
+          example: true
+        isSystemAccount:
+          type: boolean
+          description: System accounts cannot be deleted
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+          example: '2024-01-15T08:30:00.000Z'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2024-01-15T08:30:00.000Z'
+
+    JournalEntry:
+      type: object
+      required:
+        - id
+        - entryNumber
+        - date
+        - description
+        - lineItems
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 'je_1234567890abcdef'
+        entryNumber:
+          type: string
+          description: Auto-generated sequential number
+          example: 'JE-000001'
+        date:
+          type: string
+          format: date-time
+          example: '2024-01-15T00:00:00.000Z'
+        description:
+          type: string
+          example: 'Monthly rent payment for January 2024'
+        lineItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/JournalLineItem'
+        status:
+          type: string
+          enum: [DRAFT, POSTED, REVERSED]
+          example: 'POSTED'
+        postedAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2024-01-15T10:00:00.000Z'
+        postedBy:
+          type: string
+          nullable: true
+          example: 'user_1234567890'
+        reversalEntryId:
+          type: string
+          format: uuid
+          nullable: true
+          example: 'je_0987654321fedcba'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    JournalLineItem:
+      type: object
+      required:
+        - id
+        - accountId
+        - description
+        - debitAmount
+        - creditAmount
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 'li_1234567890abcdef'
+        accountId:
+          type: string
+          format: uuid
+          description: Account being debited or credited
+          example: 'acc_1234567890abcdef'
+        description:
+          type: string
+          example: 'Rent expense for January'
+        debitAmount:
+          type: number
+          format: float
+          minimum: 0
+          example: 5000
+        creditAmount:
+          type: number
+          format: float
+          minimum: 0
+          example: 0
+
+    Invoice:
+      type: object
+      required:
+        - id
+        - invoiceNumber
+        - type
+        - customerId
+        - customerName
+        - date
+        - dueDate
+        - lineItems
+        - subTotal
+        - taxAmount
+        - totalAmount
+        - paidAmount
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 'inv_1234567890abcdef'
+        invoiceNumber:
+          type: string
+          description: Auto-generated invoice number
+          example: 'INV-20240115-0001'
+        type:
+          type: string
+          enum: [RECEIVABLE, PAYABLE]
+          example: 'RECEIVABLE'
+        customerId:
+          type: string
+          format: uuid
+          description: Customer ID (AR) or Vendor ID (AP)
+          example: 'customer_001'
+        customerName:
+          type: string
+          example: 'Acme Corporation'
+        date:
+          type: string
+          format: date-time
+          example: '2024-01-15T00:00:00.000Z'
+        dueDate:
+          type: string
+          format: date-time
+          example: '2024-02-15T00:00:00.000Z'
+        lineItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceLineItem'
+        subTotal:
+          type: number
+          format: float
+          description: Total before tax
+          example: 750
+        taxAmount:
+          type: number
+          format: float
+          description: Total tax amount
+          example: 75
+        totalAmount:
+          type: number
+          format: float
+          description: Subtotal + Tax
+          example: 825
+        paidAmount:
+          type: number
+          format: float
+          description: Total payments recorded
+          example: 825
+        outstandingAmount:
+          type: number
+          format: float
+          description: Total amount - Paid amount (calculated)
+          example: 0
+        status:
+          type: string
+          enum: [DRAFT, PENDING, PAID, OVERDUE, CANCELLED]
+          example: 'PAID'
+        notes:
+          type: string
+          nullable: true
+          example: 'Payment terms: Net 30'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    InvoiceLineItem:
+      type: object
+      required:
+        - id
+        - description
+        - quantity
+        - unitPrice
+        - taxRate
+        - total
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 'ili_1234567890abcdef'
+        description:
+          type: string
+          example: 'Product A - Premium Widget'
+        quantity:
+          type: number
+          format: float
+          minimum: 0
+          example: 5
+        unitPrice:
+          type: number
+          format: float
+          minimum: 0
+          example: 100
+        taxRate:
+          type: number
+          format: float
+          minimum: 0
+          description: Tax percentage (e.g., 10 = 10%)
+          example: 10
+        total:
+          type: number
+          format: float
+          description: Calculated: quantity * unitPrice * (1 + taxRate/100)
+          example: 550
+
+    Payment:
+      type: object
+      required:
+        - id
+        - invoiceId
+        - amount
+        - paymentDate
+        - paymentMethod
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 'pay_1234567890abcdef'
+        invoiceId:
+          type: string
+          format: uuid
+          example: 'inv_1234567890abcdef'
+        amount:
+          type: number
+          format: float
+          minimum: 0
+          example: 825
+        paymentDate:
+          type: string
+          format: date-time
+          example: '2024-01-20T00:00:00.000Z'
+        paymentMethod:
+          type: string
+          enum: [BANK_TRANSFER, CASH, CHECK, CARD, E_WALLET, OTHER]
+          example: 'BANK_TRANSFER'
+        reference:
+          type: string
+          nullable: true
+          example: 'TXN-2024-001'
+        notes:
+          type: string
+          nullable: true
+          example: 'Payment via wire transfer'
+        createdAt:
+          type: string
+          format: date-time
+          example: '2024-01-20T10:30:00.000Z'
+
+    BalanceSheetReport:
+      type: object
+      required:
+        - asOfDate
+        - assets
+        - liabilities
+        - equity
+        - totalLiabilitiesAndEquity
+      properties:
+        asOfDate:
+          type: string
+          format: date
+          example: '2024-01-15'
+        assets:
+          $ref: '#/components/schemas/AssetSection'
+        liabilities:
+          $ref: '#/components/schemas/LiabilitySection'
+        equity:
+          $ref: '#/components/schemas/EquitySection'
+        totalLiabilitiesAndEquity:
+          type: number
+          format: float
+          description: Should equal total assets
+          example: 650000
+
+    AssetSection:
+      type: object
+      properties:
+        current:
+          type: number
+          format: float
+          example: 150000
+        nonCurrent:
+          type: number
+          format: float
+          example: 500000
+        total:
+          type: number
+          format: float
+          example: 650000
+
+    LiabilitySection:
+      type: object
+      properties:
+        current:
+          type: number
+          format: float
+          example: 75000
+        nonCurrent:
+          type: number
+          format: float
+          example: 150000
+        total:
+          type: number
+          format: float
+          example: 225000
+
+    EquitySection:
+      type: object
+      properties:
+        ownerCapital:
+          type: number
+          format: float
+          example: 350000
+        retainedEarnings:
+          type: number
+          format: float
+          example: 75000
+        total:
+          type: number
+          format: float
+          example: 425000
+
+    IncomeStatementReport:
+      type: object
+      required:
+        - startDate
+        - endDate
+        - revenue
+        - expenses
+        - operatingIncome
+        - netIncome
+      properties:
+        startDate:
+          type: string
+          format: date
+          example: '2024-01-01'
+        endDate:
+          type: string
+          format: date
+          example: '2024-01-31'
+        revenue:
+          $ref: '#/components/schemas/RevenueSection'
+        expenses:
+          $ref: '#/components/schemas/ExpenseSection'
+        operatingIncome:
+          type: number
+          format: float
+          example: 110000
+        otherIncome:
+          type: number
+          format: float
+          example: 5000
+        netIncome:
+          type: number
+          format: float
+          example: 115000
+
+    RevenueSection:
+      type: object
+      properties:
+        grossSales:
+          type: number
+          format: float
+          example: 500000
+        salesReturns:
+          type: number
+          format: float
+          example: -10000
+        netSales:
+          type: number
+          format: float
+          example: 490000
+        otherRevenue:
+          type: number
+          format: float
+          example: 5000
+        totalRevenue:
+          type: number
+          format: float
+          example: 495000
+
+    ExpenseSection:
+      type: object
+      properties:
+        costOfGoodsSold:
+          type: number
+          format: float
+          example: 250000
+        operatingExpenses:
+          type: number
+          format: float
+          example: 125000
+        otherExpenses:
+          type: number
+          format: float
+          example: 10000
+        totalExpenses:
+          type: number
+          format: float
+          example: 385000
+
+    CashFlowReport:
+      type: object
+      required:
+        - startDate
+        - endDate
+        - operatingActivities
+        - investingActivities
+        - financingActivities
+        - netCashFlow
+        - cashBeginning
+        - cashEnding
+      properties:
+        startDate:
+          type: string
+          format: date
+          example: '2024-01-01'
+        endDate:
+          type: string
+          format: date
+          example: '2024-01-31'
+        operatingActivities:
+          $ref: '#/components/schemas/CashFlowOperating'
+        investingActivities:
+          $ref: '#/components/schemas/CashFlowInvesting'
+        financingActivities:
+          $ref: '#/components/schemas/CashFlowFinancing'
+        netCashFlow:
+          type: number
+          format: float
+          example: 40000
+        cashBeginning:
+          type: number
+          format: float
+          example: 100000
+        cashEnding:
+          type: number
+          format: float
+          example: 140000
+
+    CashFlowOperating:
+      type: object
+      properties:
+        netIncome:
+          type: number
+          format: float
+          example: 115000
+        accountsReceivableChange:
+          type: number
+          format: float
+          example: -25000
+        accountsPayableChange:
+          type: number
+          format: float
+          example: 15000
+        inventoryChange:
+          type: number
+          format: float
+          example: -10000
+        netCashFromOperations:
+          type: number
+          format: float
+          example: 95000
+
+    CashFlowInvesting:
+      type: object
+      properties:
+        capitalExpenditures:
+          type: number
+          format: float
+          example: -50000
+        equipmentPurchase:
+          type: number
+          format: float
+          example: -25000
+        netCashFromInvesting:
+          type: number
+          format: float
+          example: -75000
+
+    CashFlowFinancing:
+      type: object
+      properties:
+        loanProceeds:
+          type: number
+          format: float
+          example: 50000
+        loanRepayment:
+          type: number
+          format: float
+          example: -10000
+        dividendsPaid:
+          type: number
+          format: float
+          example: -20000
+        netCashFromFinancing:
+          type: number
+          format: float
+          example: 20000
+
+    # Request DTOs
+    CreateAccountRequest:
+      type: object
+      required:
+        - code
+        - name
+        - type
+      properties:
+        code:
+          type: string
+          pattern: '^[0-9]+(-[0-9]+)+$'
+          description: Hierarchical code (e.g., "1-1001")
+          example: '1-1001'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: 'Cash'
+        description:
+          type: string
+          maxLength: 500
+          example: 'Primary cash account'
+        type:
+          type: string
+          enum: [ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE]
+          example: 'ASSET'
+        parentId:
+          type: string
+          format: uuid
+          description: Parent account ID for hierarchical accounts
+
+    UpdateAccountRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: 'Petty Cash'
+        description:
+          type: string
+          maxLength: 500
+          example: 'Updated description'
+
+    CreateJournalEntryRequest:
+      type: object
+      required:
+        - date
+        - description
+        - lineItems
+      properties:
+        date:
+          type: string
+          format: date-time
+          example: '2024-01-15T00:00:00.000Z'
+        description:
+          type: string
+          minLength: 1
+          maxLength: 500
+          example: 'Monthly rent payment'
+        lineItems:
+          type: array
+          minItems: 2
+          items:
+            $ref: '#/components/schemas/JournalLineItemInput'
+
+    JournalLineItemInput:
+      type: object
+      required:
+        - accountId
+        - debitAmount
+        - creditAmount
+      properties:
+        accountId:
+          type: string
+          format: uuid
+          example: 'acc_1234567890abcdef'
+        description:
+          type: string
+          maxLength: 500
+          example: 'Rent expense'
+        debitAmount:
+          type: number
+          format: float
+          minimum: 0
+          example: 5000
+        creditAmount:
+          type: number
+          format: float
+          minimum: 0
+          example: 0
+
+    UpdateJournalEntryRequest:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          minLength: 1
+          maxLength: 500
+          example: 'Updated description'
+
+    ReverseJournalEntryRequest:
+      type: object
+      required:
+        - reason
+      properties:
+        reason:
+          type: string
+          maxLength: 500
+          example: 'Original entry was incorrect'
+
+    CreateInvoiceRequest:
+      type: object
+      required:
+        - type
+        - customerId
+        - customerName
+        - date
+        - dueDate
+        - lineItems
+      properties:
+        type:
+          type: string
+          enum: [RECEIVABLE, PAYABLE]
+          example: 'RECEIVABLE'
+        customerId:
+          type: string
+          format: uuid
+          example: 'customer_001'
+        customerName:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: 'Acme Corporation'
+        date:
+          type: string
+          format: date-time
+          example: '2024-01-15T00:00:00.000Z'
+        dueDate:
+          type: string
+          format: date-time
+          example: '2024-02-15T00:00:00.000Z'
+        lineItems:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/InvoiceLineItemInput'
+        notes:
+          type: string
+          maxLength: 500
+          example: 'Payment terms: Net 30 days'
+
+    InvoiceLineItemInput:
+      type: object
+      required:
+        - description
+        - quantity
+        - unitPrice
+        - taxRate
+      properties:
+        description:
+          type: string
+          minLength: 1
+          maxLength: 500
+          example: 'Product A - Premium Widget'
+        quantity:
+          type: number
+          format: float
+          minimum: 0.01
+          example: 5
+        unitPrice:
+          type: number
+          format: float
+          minimum: 0
+          example: 100
+        taxRate:
+          type: number
+          format: float
+          minimum: 0
+          example: 10
+
+    UpdateInvoiceRequest:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date-time
+          example: '2024-01-20T00:00:00.000Z'
+        dueDate:
+          type: string
+          format: date-time
+          example: '2024-02-20T00:00:00.000Z'
+        lineItems:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/InvoiceLineItemInput'
+        notes:
+          type: string
+          maxLength: 500
+          example: 'Updated notes'
+
+    ChangeInvoiceStatusRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [DRAFT, PENDING, PAID, CANCELLED]
+          example: 'PAID'
+
+    RecordPaymentRequest:
+      type: object
+      required:
+        - amount
+        - paymentDate
+        - paymentMethod
+      properties:
+        amount:
+          type: number
+          format: float
+          minimum: 0.01
+          example: 825
+        paymentDate:
+          type: string
+          format: date-time
+          example: '2024-01-20T00:00:00.000Z'
+        paymentMethod:
+          type: string
+          enum: [BANK_TRANSFER, CASH, CHECK, CARD, E_WALLET, OTHER]
+          example: 'BANK_TRANSFER'
+        reference:
+          type: string
+          maxLength: 100
+          example: 'TXN-2024-001'
+        notes:
+          type: string
+          maxLength: 500
+          example: 'Payment via wire transfer'
+
+  responses:
+    SuccessEmpty:
+      description: Successful operation with no data returned
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/SuccessResponse'
+              - type: object
+                properties:
+                  data:
+                    nullable: true
+                    example: null
+          example:
+            success: true
+            statusCode: 200
+            message: 'Operation completed successfully'
+            data: null
+            timestamp: '2024-01-15T10:30:00.000Z'
+            requestId: 'req_01JABCDE'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            statusCode: 404
+            error:
+              code: 'NOT_FOUND'
+              message: 'Resource not found'
+            timestamp: '2024-01-15T10:30:00.000Z'
+            requestId: 'req_01JABCDE'
+
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            statusCode: 400
+            error:
+              code: 'VALIDATION_ERROR'
+              message: 'Request validation failed'
+              details:
+                - field: 'code'
+                  message: 'Invalid account code format'
+                - field: 'name'
+                  message: 'Name is required'
+            timestamp: '2024-01-15T10:30:00.000Z'
+            requestId: 'req_01JABCDE'
+
+    Conflict:
+      description: Conflict error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            statusCode: 409
+            error:
+              code: 'ACCOUNT_CODE_EXISTS'
+              message: 'Account code already exists'
+            timestamp: '2024-01-15T10:30:00.000Z'
+            requestId: 'req_01JABCDE'
